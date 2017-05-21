@@ -7,11 +7,14 @@ Program written in Pyton3.6 with Flask
 - [ ] Check balances on exchanges
 - [ ] Check balances on wallets
 - [ ] Check price for everyone currency
+- [ ] Select exchange for price check
 - [ ] Count summary in BTC and USD
+- [ ] Group many addresses into one group
 - [ ] User firendly Web GUI
 - [ ] User settings (port, password, balance)
 - [ ] Password protection
-
+- [ ] Save history of previous prices
+- [ ] Set interval between checking data
 
 ## Exchanges to add:
 - [ ] Poloniex
@@ -19,12 +22,14 @@ Program written in Pyton3.6 with Flask
 - [ ] Liqui
 - [ ] Bitstamp
 - [ ] Kraken
+- [ ] BitShares
 
 
 ## Currency to add:
-- [ ] BTC
+- [X] BTC
 - [ ] LTC
 - [ ] ETH
 - [ ] ETC
 - [ ] DOGE
 - [ ] XMR
+- [ ] BTS
