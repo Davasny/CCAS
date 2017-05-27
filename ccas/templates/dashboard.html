@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% set active_page = "dashboard" %}
+
+{% block content %}
+<h2><small>Total BTC:</small> <small>+10%</small></h2>
+<h2><small>Total USD:</small> $7 501.08 <small>+0.5%</small></h2>
+<h2><small>Current BTC price:</small> $1 980.02 <small>-5%</small></h2>
+
+<form class="form-inline">
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">Unlock API keys</div>
+            <input type="password" class="form-control" id="exampleInputAmount" placeholder="Password">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">Unlock!</button>
+</form>
+
+</br>
+<table class="table table-condensed table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Currency</th>
+            <th>Place</th>
+            <th>Amount</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    {% for element in balances %}
+        <tr>
+            <td>{{ element[0] }}</td>
+
+            {% if element[4]=="CURRENCY" %}<td>{{ element[1] }}</td>{% endif %}
+            {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
+            {% if element[4]=="EXCHANGE" %}<td>{{ element[1] }}</td>{% endif %}
+
+            <td>{{ element[2] }}</td>
+            <td>{{ element[3] }}</td>
+            <td>{{ (element[2]*element[3])|round(8) }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

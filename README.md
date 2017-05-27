@@ -17,7 +17,7 @@ Program written in Pyton3.6 with Flask
 - [ ] Set interval between checking data
 
 ## Exchanges to add:
-- [ ] Poloniex
+- [X] Poloniex
 - [ ] BTC-e
 - [ ] Liqui
 - [ ] Bitstamp
