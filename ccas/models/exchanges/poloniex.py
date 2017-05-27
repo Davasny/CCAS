@@ -51,7 +51,7 @@ def get_balances():
         else:
             all_balances[i][3] = 1
 
-        all_balances[i][4] = "CURRENCY"
+        all_balances[i][4] = "EXCHANGE"
         i += 1
 
 
@@ -61,3 +61,7 @@ def get_balances():
 def get_all_prices():
     raw_json = urllib.request.urlopen('https://poloniex.com/public?command=returnTicker')
     return json.loads(raw_json.read().decode('utf-8'))
+
+def get_price(currency):
+    raw_json = urllib.request.urlopen('https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_'+ currency +'&depth=1')
+    return Decimal(json.loads(raw_json.read().decode('utf-8'))["asks"][0][0])
