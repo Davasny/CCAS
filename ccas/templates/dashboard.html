@@ -32,7 +32,16 @@
         <tr>
             <td>{{ element[0] }}</td>
 
-            {% if element[4]=="CURRENCY" %}<td>{{ element[1] }}</td>{% endif %}
+            {% if element[4]=="CURRENCY" %}
+
+            {% if element[0]=="BTC" %}
+            <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ element[1] }}</a></td>
+            {% elif element[0]=="ETH" %}
+            <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ element[1] }}</a></td>
+            {% endif %}
+
+            {% endif %}
+
             {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
             {% if element[4]=="EXCHANGE" %}<td>{{ element[1] }}</td>{% endif %}
 
