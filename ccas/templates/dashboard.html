@@ -7,11 +7,11 @@
 <h2><small>Total USD:</small> $7 501.08 <small>+0.5%</small></h2>
 <h2><small>Current BTC price:</small> $1 980.02 <small>-5%</small></h2>
 
-<form class="form-inline">
+<form class="form-inline" action="/use_password" method="POST" role="form">
     <div class="form-group">
         <div class="input-group">
             <div class="input-group-addon">Unlock API keys</div>
-            <input type="password" class="form-control" id="exampleInputAmount" placeholder="Password">
+            <input name="password" type="password" class="form-control" id="exampleInputAmount" placeholder="Password">
         </div>
     </div>
     <button type="submit" class="btn btn-success">Unlock!</button>
@@ -33,17 +33,19 @@
             <td>{{ element[0] }}</td>
 
             {% if element[4]=="CURRENCY" %}
+                {% if element[0]=="BTC" %}
+                    <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ element[1] }}</a></td>
+                {% elif element[0]=="ETH" %}
+                    <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ element[1] }}</a></td>
+                {% endif %}
 
-            {% if element[0]=="BTC" %}
-            <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ element[1] }}</a></td>
-            {% elif element[0]=="ETH" %}
-            <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ element[1] }}</a></td>
-            {% endif %}
-
+            {% elif element[4]=="EXCHANGE" %}
+                {% if element[1]=="Poloniex" %}
+                    <td><a href="https://poloniex.com/balances">{{ element[1] }}</a></td>
+                {% endif %}
             {% endif %}
 
             {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
-            {% if element[4]=="EXCHANGE" %}<td>{{ element[1] }}</td>{% endif %}
 
             <td>{{ element[2] }}</td>
             <td>{{ element[3] }}</td>

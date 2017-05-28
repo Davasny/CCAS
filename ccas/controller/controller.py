@@ -69,4 +69,14 @@ def settings():
     balances = currency.get_details("BTC", list_of_addresses, "balance")
     return render_template('settings.html', balances=balances)
 
+@app.route('/use_password', methods=['GET', 'POST'])
+def use_password():
+    if request.method == 'POST':
+        password = request.form['password'].encode('utf-8')
+        hash_password = hashlib.sha256(password).hexdigest()
 
+        reponse = make_response(redirect("/dashboard"))
+        reponse.set_cookie('password', hash_password)
+        return reponse
+    else:
+        return dashboard()
