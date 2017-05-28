@@ -16,7 +16,7 @@ def dashboard():
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
     supported_exchanges = config["Exchanges"]["supportedExchanges"].split(",")
     balances = []
-
+    errors = []
 
     tmp_group = []
     for new_currency in supported_currency:
@@ -47,11 +47,15 @@ def dashboard():
 
     # loooop through all exchanges
     for new_exchange in supported_exchanges:
-        balances.extend(exchanges.get_balances(new_exchange))
+        new_response = exchanges.get_balances(new_exchange)
+        if False in new_response.values():
+            errors.append("Something went wrong with keys for "+ new_exchange +". Please check password again")
+        else:
+            balances.extend(new_response["data"])
 
 
     # [CURRENCY, PLACE, AMOUNT, PRICE]
-    return render_template('dashboard.html', balances=balances)
+    return render_template('dashboard.html', balances=balances, errors=errors)
 
 @app.route('/exchanges')
 def exchanges_view():
