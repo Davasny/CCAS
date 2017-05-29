@@ -1,12 +1,4 @@
-import sqlite3
-import time
-import os
-import hmac
-import hashlib
-import urllib
-import urllib.request
-import json
-
+from ccas.models import database
 from . import btc, eth
 
 def get_details(curerncy, list_of_addresses, type):
@@ -16,3 +8,12 @@ def get_details(curerncy, list_of_addresses, type):
     elif curerncy == "ETH" and type == "balance":
         return eth.get_balance(list_of_addresses)
 
+
+def get_all_wallets():
+    response = database.new_query("SELECT id, currency, name, address FROM wallets;")
+    return list(response)
+
+
+def get_wallets(currency):
+    response = database.new_query("SELECT id, exchange FROM wallets WHERE currency;")
+    return list(response)
