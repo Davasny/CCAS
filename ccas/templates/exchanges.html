@@ -4,4 +4,50 @@
 
 {% block content %}
 <h1>Exchanges api keys</h1>
+
+{% include 'password_form.html' %}
+
+<table class="table table-condensed table-bordered table-hover" id="exchanges-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Exchange</th>
+            <th>Public Key</th>
+            <th>Private Key</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    {% for element in exchanges %}
+        <tr>
+            <td>{{ element[0] }}</td>
+            <td>{{ element[1] }}</td>
+            <td><code>{{ element[2] }}</code></td>
+            <td><code>{{ element[3] }}</code></td>
+            <td style="text-align: center;">
+                <a class="btn btn-danger" href="/exchanges/remove/{{ element[0] }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <form action="/exchanges/new" method="post" role="form">
+            <td>-</td>
+            <td>
+                <select class="form-control" name="exchange">
+                    {% for exchange in possible_exchanges %}
+                    <option>{{ exchange }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control" placeholder="public key" name="public_key"/>
+            </td>
+            <td>
+                <input type="text" class="form-control" placeholder="secret key" name="private_key"/>
+            </td>
+            <td>
+                <button class="btn btn-warning btn-small"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </td>
+            </form>
+        </tr>
+</table>
 {% endblock %}

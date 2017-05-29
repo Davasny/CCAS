@@ -11,20 +11,7 @@ import collections
 from . import keys
 
 
-def get_balances():
-    public_key = keys.get_key("public_key", "poloniex")
-    if False in public_key.values():
-        return public_key
-    else:
-        public_key = public_key["data"]
-
-    secret_key = keys.get_key("private_key", "poloniex")
-    if False in secret_key.values():
-        return secret_key
-    else:
-        secret_key = secret_key["data"]
-
-
+def get_balances(public_key, secret_key):
     return_reposne = {}
     try:
         req = {}

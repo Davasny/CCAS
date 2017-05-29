@@ -1,6 +1,7 @@
 import collections
 from ccas import app
 from ccas.models import currency, exchanges
+from ccas.models.exchanges import keys
 from flask import render_template, request, make_response, redirect
 from ccas.models.currency import wallets, groups
 from decimal import *
@@ -8,13 +9,14 @@ import configparser
 import hashlib
 
 
+config = configparser.ConfigParser()
+config.read("ccas/config.ini")
+
+
 @app.route('/')
 @app.route('/dashboard')
 def dashboard():
-    config = configparser.ConfigParser()
-    config.read("ccas/config.ini")
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
-    supported_exchanges = config["Exchanges"]["supportedExchanges"].split(",")
     balances = []
     errors = []
 
@@ -23,10 +25,8 @@ def dashboard():
         all_wallets = wallets.get_raw_addresses(new_currency) # wallets without group
         balances.extend(currency.get_details(new_currency, all_wallets, "balance"))
 
-        # get group
         all_groups = groups.get_all_groups(new_currency)
 
-        # send wallets to get balances
         group_balances = []
         for group in all_groups:
             all_wallets = wallets.get_address_by_group(group[0])  # wallets without group
@@ -45,32 +45,75 @@ def dashboard():
                 tmp_group.append(group_balances)
     balances.extend(tmp_group)
 
+
     # loooop through all exchanges
-    for new_exchange in supported_exchanges:
-        new_response = exchanges.get_balances(new_exchange)
-        if False in new_response.values():
-            errors.append("Something went wrong with keys for "+ new_exchange +". Please check password again")
+    for new_exchange in exchanges.get_exchanges():
+        public_key = keys.get_key("public_key", new_exchange[0])
+        secret_key = keys.get_key("private_key", new_exchange[0])
+
+        if True in public_key.values() and True in secret_key.values():
+            public_key = public_key["data"]
+            secret_key = secret_key["data"]
+            new_response = exchanges.get_balances(new_exchange[1], public_key, secret_key)
+
+            if True in new_response.values():
+                balances.extend(new_response["data"])
+            else:
+                errors.append("Something went wrong with keys for " + new_exchange[
+                    1] + "[" + str(new_exchange[0]) + "] - " + str(new_response['msg']))
         else:
-            balances.extend(new_response["data"])
+            errors.append("Something went wrong with keys for " + new_exchange[
+                1] + "[" + str(new_exchange[0]) + "]. Please check password")
 
 
     # [CURRENCY, PLACE, AMOUNT, PRICE]
     return render_template('dashboard.html', balances=balances, errors=errors)
 
+
 @app.route('/exchanges')
 def exchanges_view():
-    list_of_addresses = []
-    list_of_addresses.append("1DfQZXnJuWnKLMgJhtso3Px7sLLGKhjk9j")
-    list_of_addresses.append("1MDUoxL1bGvMxhuoDYx6i11ePytECAk9QK")
-    balances = currency.get_details("BTC", list_of_addresses, "balance")
-    return render_template('exchanges.html', balances=balances)
+    supported_exchanges = config["Exchanges"]["supportedExchanges"].split(",")
 
-@app.route('/settings')
-def settings():
-    list_of_addresses = []
-    list_of_addresses.append("1DfQZXnJuWnKLMgJhtso3Px7sLLGKhjk9j")
-    balances = currency.get_details("BTC", list_of_addresses, "balance")
-    return render_template('settings.html', balances=balances)
+    all_exchanges = []
+    for new_exchange in exchanges.get_exchanges():
+        tmp_exchange = []
+        tmp_exchange.append(new_exchange[0])
+        tmp_exchange.append(new_exchange[1])
+        public_key = keys.get_key("public_key", new_exchange[0])
+        secret_key = keys.get_key("private_key", new_exchange[0])
+
+        if True in public_key.values() and True in secret_key.values():
+            public_key_decoded = public_key["data"].decode('utf-8')
+            secret_key_decoded = secret_key["data"].decode('utf-8')
+
+            tmp_exchange.append(public_key_decoded[:5] + " [...] " + public_key_decoded[len(public_key_decoded) - 5:])
+            tmp_exchange.append(secret_key_decoded[:5] + " [...] " + secret_key_decoded[len(secret_key_decoded) - 5:])
+
+        all_exchanges.append(tmp_exchange)
+
+    # [id, exchange, public_key, private_key]
+    return render_template('exchanges.html', possible_exchanges=supported_exchanges, exchanges=all_exchanges )
+
+
+
+@app.route('/exchanges/remove/<id>')
+def exchanges_remove(id):
+    reponse = make_response(redirect("/exchanges"))
+    return reponse
+
+
+@app.route('/exchanges/new', methods=['GET', 'POST'])
+def exchanges_new():
+    if request.method == 'POST':
+        exchange = request.form['exchange']
+        public_key = request.form['public_key']
+        private_ley = request.form['private_key']
+
+        keys.save_keys(exchange, public_key, private_ley)
+
+    reponse = make_response(redirect("/exchanges"))
+    return reponse
+
 
 @app.route('/use_password', methods=['GET', 'POST'])
 def use_password():
@@ -78,11 +121,18 @@ def use_password():
         password = request.form['password'].encode('utf-8')
         hash_password = hashlib.sha256(password).hexdigest()
 
-        reponse = make_response(redirect("/dashboard"))
+        reponse = make_response(redirect(request.referrer))
         reponse.set_cookie('password', hash_password)
         return reponse
     else:
         return dashboard()
+
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+
 @app.context_processor
 def utility_processor():
     def get_pass_hash():

@@ -7,22 +7,12 @@
 <h2><small>Total USD:</small> $7 501.08 <small>+0.5%</small></h2>
 <h2><small>Current BTC price:</small> $1 980.02 <small>-5%</small></h2>
 
+{% include 'password_form.html' %}
 
 {% for message in errors%}
 <div class="alert alert-danger" role="alert">{{ message }}</div>
 {% endfor %}
 
-<form class="form-inline" action="/use_password" method="POST" role="form">
-    <div class="form-group">
-        <div class="input-group">
-            <div class="input-group-addon">Unlock API keys</div>
-            <input name="password" type="password" class="form-control" id="exampleInputAmount" placeholder="Password">
-        </div>
-    </div>
-    <button type="submit" class="btn btn-success">Unlock!</button>
-</form>
-
-</br>
 <table class="table table-condensed table-bordered table-hover">
     <thead>
         <tr>
