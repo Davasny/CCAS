@@ -14,4 +14,3 @@ def insert_new(command, args=()):
     cur.execute(command, args)
     operating_database.commit()
     return True
-

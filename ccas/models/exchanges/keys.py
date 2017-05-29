@@ -6,9 +6,9 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 import json
 
-def get_key(type, exchange):
-    response = database.new_query("SELECT `" + type + "` FROM exchanges_api_keys WHERE `exchange`='" + exchange + "';")
-    #out = decrypt_key(str(response[0][0])).decode('utf-8')
+
+def get_key(type, exchange_id):
+    response = database.new_query("SELECT `" + type + "` FROM exchanges_api_keys WHERE `id`='" + str(exchange_id) + "';")
     return decrypt_key(str(response[0][0]))
 
 
@@ -18,7 +18,7 @@ def save_keys(exchange, public_key, private_key):
 
     args = (exchange, encrypted_public_key, encrypted_private_key)
     response = database.insert_new("INSERT INTO exchanges_api_keys (`exchange`,`public_key`,`private_key`) VALUES (?, ?, ?) ;", args)
-    print(response)
+
     return True
 
 def encrypt_key(plain_key):
