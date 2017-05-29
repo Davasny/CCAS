@@ -22,14 +22,14 @@ def dashboard():
 
     tmp_group = []
     for new_currency in supported_currency:
-        all_wallets = wallets.get_raw_addresses(new_currency) # wallets without group
+        all_wallets = wallets.get_addresses_with_names(new_currency) # wallets without group
         balances.extend(currency.get_details(new_currency, all_wallets, "balance"))
 
         all_groups = groups.get_all_groups(new_currency)
 
         group_balances = []
         for group in all_groups:
-            all_wallets = wallets.get_address_by_group(group[0])  # wallets without group
+            all_wallets = wallets.get_address_by_group(group[0])  # wallets with group
 
             if all_wallets:
                 group_balances.append(new_currency)
@@ -66,7 +66,7 @@ def dashboard():
                 1] + "[" + str(new_exchange[0]) + "]. Please check password")
 
 
-    # [CURRENCY, PLACE, AMOUNT, PRICE]
+    # [CURRENCY, PLACE, AMOUNT, PRICE, TYPE, NAME]
     return render_template('dashboard.html', balances=balances, errors=errors)
 
 
@@ -93,6 +93,25 @@ def exchanges_view():
 
     # [id, exchange, public_key, private_key]
     return render_template('exchanges.html', possible_exchanges=supported_exchanges, exchanges=all_exchanges )
+
+
+@app.route('/wallets')
+def wallets_view():
+    supported_currency = config["Currency"]["supportedCurrency"].split(",")
+
+    all_wallets = []
+    for wallet in currency.get_all_wallets():
+        print(wallet)
+        tmp_wallet = []
+        tmp_wallet.append(wallet[0])
+        tmp_wallet.append(wallet[1])
+        tmp_wallet.append(wallet[2])
+        tmp_wallet.append(wallet[3])
+
+        all_wallets.append(tmp_wallet)
+
+    # [id, currency, name, address]
+    return render_template('wallets.html', possible_currency=supported_currency, wallets=all_wallets )
 
 
 
@@ -143,7 +162,7 @@ def utility_processor():
         return password[:5] + " [...] " + password[len(password) - 5:]
 
     def check_if_pass():
-        if 'password' in request.cookies:
+        if 'password' in request.cookies and request.cookies['password'] != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855':
             return True
         else:
             return False
