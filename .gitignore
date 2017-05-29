@@ -289,3 +289,4 @@ __pycache__/
 layout/
 file_hierarchy.txt
 *.db
+*.zip
