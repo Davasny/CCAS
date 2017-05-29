@@ -84,3 +84,16 @@ def use_password():
         return reponse
     else:
         return dashboard()
+@app.context_processor
+def utility_processor():
+    def get_pass_hash():
+        password = request.cookies.get('password')
+        return password[:5] + " [...] " + password[len(password) - 5:]
+
+    def check_if_pass():
+        if 'password' in request.cookies:
+            return True
+        else:
+            return False
+
+    return dict(get_pass_hash=get_pass_hash, check_if_pass=check_if_pass)
