@@ -28,10 +28,16 @@
             <td>{{ element[0] }}</td>
 
             {% if element[4]=="CURRENCY" %}
+                {% if element[5]!='' and element[5] is not none%}
+                    {% set name = element[5] %}
+                {% else %}
+                    {% set name = element[1] %}
+                {% endif %}
+
                 {% if element[0]=="BTC" %}
-                    <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ element[1] }}</a></td>
+                    <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ name }}</a></td>
                 {% elif element[0]=="ETH" %}
-                    <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ element[1] }}</a></td>
+                    <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ name }}</a></td>
                 {% endif %}
 
             {% elif element[4]=="EXCHANGE" %}
