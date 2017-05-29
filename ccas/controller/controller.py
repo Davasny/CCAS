@@ -69,7 +69,6 @@ def exchanges_view():
 def settings():
     list_of_addresses = []
     list_of_addresses.append("1DfQZXnJuWnKLMgJhtso3Px7sLLGKhjk9j")
-    list_of_addresses.append("1MDUoxL1bGvMxhuoDYx6i11ePytECAk9QK")
     balances = currency.get_details("BTC", list_of_addresses, "balance")
     return render_template('settings.html', balances=balances)
 
