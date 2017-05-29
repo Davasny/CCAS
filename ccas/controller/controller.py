@@ -117,6 +117,8 @@ def wallets_view():
 
 @app.route('/exchanges/remove/<id>')
 def exchanges_remove(id):
+    if request.referrer is not None and '/exchanges' in request.referrer:
+        keys.remove_key(id)
     reponse = make_response(redirect("/exchanges"))
     return reponse
 
