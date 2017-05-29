@@ -118,11 +118,14 @@ def exchanges_new():
 @app.route('/use_password', methods=['GET', 'POST'])
 def use_password():
     if request.method == 'POST':
-        password = request.form['password'].encode('utf-8')
-        hash_password = hashlib.sha256(password).hexdigest()
-
         reponse = make_response(redirect(request.referrer))
-        reponse.set_cookie('password', hash_password)
+        hash_password = ''
+        if 'clear' not in request.form and request.form['password'] != '':
+            password = request.form['password'].encode('utf-8')
+            hash_password = hashlib.sha256(password).hexdigest()
+            reponse.set_cookie('password', hash_password)
+        else:
+            reponse.set_cookie('password', hash_password, expires=0)
         return reponse
     else:
         return dashboard()
