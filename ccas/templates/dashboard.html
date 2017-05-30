@@ -48,7 +48,7 @@
 
             {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
 
-            <td>{{ element[2] }}</td>
+            <td>{{ element[2]|round(8) }}</td>
             <td>{{ element[3] }}</td>
             <td>{{ (element[2]*element[3])|round(8) }}</td>
         </tr>
