@@ -13,4 +13,5 @@ def new_argument_query(command, args=()):
     cur = operating_database.cursor()
     cur.execute(command, args)
     operating_database.commit()
-    return True
+    return cur.lastrowid
+
