@@ -9,8 +9,11 @@ def get_details(curerncy, list_of_addresses, type):
         return eth.get_balance(list_of_addresses)
 
 
-def get_all_wallets():
-    response = database.new_query("SELECT id, currency, name, address FROM wallets;")
+def get_all_wallets(*args):
+    if args:
+        response = database.new_query("SELECT id, currency, name, address FROM wallets WHERE currency='"+ args[0] +"' ;")
+    else:
+        response = database.new_query("SELECT id, currency, name, address FROM wallets;")
     return list(response)
 
 
