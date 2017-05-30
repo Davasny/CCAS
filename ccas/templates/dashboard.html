@@ -25,9 +25,10 @@
     </thead>
     {% for element in balances %}
         <tr>
-            <td>{{ element[0] }}</td>
+            <td>{{ element[0]|upper }}</td>
 
             {% if element[4]=="CURRENCY" %}
+
                 {% if element[5]!='' and element[5] is not none%}
                     {% set name = element[5] %}
                 {% else %}
@@ -43,6 +44,8 @@
             {% elif element[4]=="EXCHANGE" %}
                 {% if element[1]=="Poloniex" %}
                     <td><a href="https://poloniex.com/balances">{{ element[1] }}</a></td>
+                {% elif element[1]=="BTC-e" %}
+                    <td><a href="https://btc-e.com/profile#funds">{{ element[1] }}</a></td>
                 {% endif %}
             {% endif %}
 
