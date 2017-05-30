@@ -22,7 +22,7 @@ def get_balance(list_of_address):
 
     raw_json = urllib.request.urlopen(
         'https://api.etherscan.io/api?module=account&action=balancemulti&address=' + string_of_addresses[:-1])
-    parsed = json.loads(raw_json.read().decode('utf=8'))
+    parsed = json.loads(raw_json.read().decode('utf=8'))['result']
 
     all_balances = [([0] * 6) for i in range(len(parsed))]
 
@@ -31,13 +31,13 @@ def get_balance(list_of_address):
     i = 0
     for account in parsed:
         all_balances[i][0] = "ETH"
-        all_balances[i][1] = parsed['result'][i-1]['account']
-        all_balances[i][2] = Decimal(parsed['result'][i-1]['balance']) / (10**18)
+        all_balances[i][1] = account['account']
+        all_balances[i][2] = Decimal(account['balance']) / (10**18)
         all_balances[i][3] = price
         all_balances[i][4] = "CURRENCY"
 
         if use_names:
-            all_balances[i][5] = list_of_address[i-1][1]
+            all_balances[i][5] = list_of_address[i][1]
         else:
             all_balances[i][5] = ''
 
