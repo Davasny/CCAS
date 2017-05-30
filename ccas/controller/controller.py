@@ -4,6 +4,7 @@ from ccas.models import currency, exchanges
 from ccas.models.exchanges import keys
 from flask import render_template, request, make_response, redirect
 from ccas.models.currency import wallets, groups
+from ccas.models import database
 from decimal import *
 import configparser
 import hashlib
@@ -25,11 +26,11 @@ def dashboard():
         all_wallets = wallets.get_addresses_with_names(new_currency) # wallets without group
         balances.extend(currency.get_details(new_currency, all_wallets, "balance"))
 
-        all_groups = groups.get_all_groups(new_currency)
+        all_groups = groups.get_groups_for(new_currency)
 
         group_balances = []
         for group in all_groups:
-            all_wallets = wallets.get_address_by_group(group[0])  # wallets with group
+            all_wallets = wallets.get_address_by_group(group[0])
 
             if all_wallets:
                 group_balances.append(new_currency)
@@ -145,7 +146,6 @@ def wallets_remove(id):
     return response
 
 
-
 @app.route('/wallets/new', methods=['GET', 'POST'])
 def wallets_new():
     if request.method == 'POST':
@@ -157,6 +157,90 @@ def wallets_new():
             wallets.save_wallet(currency, new_address, name)
 
     response = make_response(redirect("/wallets"))
+    return response
+
+
+@app.route('/groups')
+def groups_view():
+    supported_currency = config["Currency"]["supportedCurrency"].split(",")
+
+    all_groups = []
+    for group in groups.get_all_groups():
+        tmp_group = []
+        tmp_group.append(group[0])
+        tmp_group.append(group[2])
+        tmp_group.append(group[1])
+        tmp_group.append(wallets.get_address_by_group(group[0]))
+        all_groups.append(tmp_group)
+
+    # [id, currency, name, wallets]
+    return render_template('groups.html', supported_currency=supported_currency, groups=all_groups )
+
+
+
+@app.route('/groups/new', methods=['GET', 'POST'])
+def groups_new():
+    if request.method == 'POST':
+        currency = request.form['currency']
+        name = request.form['name']
+        new_group_id = groups.create_new_group(name, currency)
+
+        response = make_response(redirect("/groups/edit/" + str(new_group_id)))
+    else:
+        response = make_response(redirect("/groups"))
+    return response
+
+
+
+@app.route('/groups/edit/<group_id>', methods=['GET', 'POST'])
+def groups_edit(group_id):
+    all_wallets = []
+    if request.referrer is not None and '/groups' in request.referrer:
+        messages = []
+        if 'save' in request.form:
+            #print(request.form) # ImmutableMultiDict([('name', 'BTC_GROUP'), ('24', 'on'), ('25', 'on'), ('save', '')])
+            group_name = request.form['name']
+            args = (group_id,)
+            database.new_argument_query("DELETE FROM wallet_group WHERE group_id=?", args)
+            for key, val in request.form.items():
+                if key != 'name' and key != 'save':
+                    args = (key, group_id)
+                    database.new_argument_query("INSERT INTO wallet_group (`wallet_id`,`group_id`) VALUES (?, ?) ;", args)
+            database.new_argument_query("UPDATE groups SET `name`=? WHERE `id`=?;", (group_name, group_id))
+            messages.append("Saved!")
+            
+        elif 'cancel' in request.form:
+            return make_response(redirect("/groups"))
+
+        group_details = groups.get_group_details(group_id)
+        group_name = group_details[0]
+        group_currency = group_details[1]
+        group_wallets = wallets.get_address_by_group(group_id)
+
+        for wallet in currency.get_all_wallets(group_currency):
+            tmp_wallet = []
+
+            tmp_wallet.append(wallet[0])
+            tmp_wallet.append(wallet[2])
+            tmp_wallet.append(wallet[3])
+
+            if wallet[3] in group_wallets:
+                tmp_wallet.append(True)
+            else:
+                tmp_wallet.append(False)
+
+            all_wallets.append(tmp_wallet)
+        # [id, name, address, state (in group or not)]
+        return render_template('groups_edit.html', group_id=group_id, all_wallets=all_wallets, group_name=group_name, messages=messages)
+    else:
+        return make_response(redirect("/groups"))
+
+
+@app.route('/groups/remove/<id>')
+def groups_remove(id):
+    if request.referrer is not None and '/groups' in request.referrer:
+        groups.remove_group(id)
+    response = make_response(redirect("/groups"))
     return response
 
 

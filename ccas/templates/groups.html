@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% set active_page = "groups" %}
+
+{% block content %}
+<h1>Groups</h1>
+
+<form class="form-inline" action="/groups/new" method="POST" role="form">
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">Select currency</div>
+            <select class="form-control" name="currency">
+                {% for currency in supported_currency %}
+                <option>{{ currency }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input name="name" type="text" class="form-control" placeholder="New name" required>
+        <button class="btn btn-warning btn-small"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+    </div>
+</form>
+
+</br>
+<table class="table table-condensed table-bordered table-hover" id="exchanges-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Currency</th>
+            <th>Name</th>
+            <th>Wallets</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    {% for element in groups %}
+        <tr>
+            <td>{{ element[0] }}</td>
+            <td>{{ element[1] }}</td>
+            <td>{{ element[2] }}</td>
+            <td>
+                <code>
+                {% for address in element[3]%}
+                    {{ address }} </br>
+                {% endfor %}
+                </code>
+            </td>
+            <td style="text-align: center;">
+                <a class="btn btn-info" href="/groups/edit/{{ element[0] }}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+                <a class="btn btn-danger" href="/groups/remove/{{ element[0] }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
