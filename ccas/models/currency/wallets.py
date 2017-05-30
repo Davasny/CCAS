@@ -38,3 +38,16 @@ def get_address_by_group(group_id):
     for row in raw_data:
         response.append(row[0])
     return response
+
+
+def save_wallet(currency, address, name):
+    args = (currency, address, name)
+    database.new_argument_query(
+        "INSERT INTO wallets (`currency`,`address`,`name`) VALUES (?, ?, ?) ;", args)
+    return
+
+
+def remove_wallet(id):
+    args = (id,)
+    response = database.new_argument_query("DELETE FROM wallets WHERE `id`=? ;", args)
+    return response

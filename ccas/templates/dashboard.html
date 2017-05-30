@@ -3,8 +3,8 @@
 {% set active_page = "dashboard" %}
 
 {% block content %}
-<h2><small>Total BTC:</small> <small>+10%</small></h2>
-<h2><small>Total USD:</small> $7 501.08 <small>+0.5%</small></h2>
+<h2><small>Total BTC: </small>{{ total_btc|round(8) }}<small></small></h2>
+<h2><small>Total USD: </small> $7 501.08 <small>+0.5%</small></h2>
 <h2><small>Current BTC price:</small> $1 980.02 <small>-5%</small></h2>
 
 {% include 'password_form.html' %}

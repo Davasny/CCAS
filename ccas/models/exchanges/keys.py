@@ -17,9 +17,14 @@ def save_keys(exchange, public_key, private_key):
     encrypted_private_key = encrypt_key((private_key)).decode('utf-8')
 
     args = (exchange, encrypted_public_key, encrypted_private_key)
-    response = database.insert_new("INSERT INTO exchanges_api_keys (`exchange`,`public_key`,`private_key`) VALUES (?, ?, ?) ;", args)
+    database.new_argument_query("INSERT INTO exchanges_api_keys (`exchange`,`public_key`,`private_key`) VALUES (?, ?, ?) ;", args)
 
     return True
+
+def remove_key(id):
+    args = (id,)
+    response = database.new_argument_query("DELETE FROM exchanges_api_keys WHERE `id`=? ;", args)
+    return response
 
 def encrypt_key(plain_key):
     plain_key = pad(plain_key.encode(), 16)

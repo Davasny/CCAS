@@ -47,27 +47,29 @@ def dashboard():
 
 
     # loooop through all exchanges
-    for new_exchange in exchanges.get_exchanges():
-        public_key = keys.get_key("public_key", new_exchange[0])
-        secret_key = keys.get_key("private_key", new_exchange[0])
+    if check_if_pass():
+        for new_exchange in exchanges.get_exchanges():
+            public_key = keys.get_key("public_key", new_exchange[0])
+            secret_key = keys.get_key("private_key", new_exchange[0])
 
-        if True in public_key.values() and True in secret_key.values():
-            public_key = public_key["data"]
-            secret_key = secret_key["data"]
-            new_response = exchanges.get_balances(new_exchange[1], public_key, secret_key)
+            if True in public_key.values() and True in secret_key.values():
+                public_key = public_key["data"]
+                secret_key = secret_key["data"]
+                new_response = exchanges.get_balances(new_exchange[1], public_key, secret_key)
 
-            if True in new_response.values():
-                balances.extend(new_response["data"])
+                if True in new_response.values():
+                    balances.extend(new_response["data"])
+                else:
+                    errors.append("Something went wrong with keys for " + new_exchange[
+                        1] + "[" + str(new_exchange[0]) + "] - " + str(new_response['msg']))
             else:
                 errors.append("Something went wrong with keys for " + new_exchange[
-                    1] + "[" + str(new_exchange[0]) + "] - " + str(new_response['msg']))
-        else:
-            errors.append("Something went wrong with keys for " + new_exchange[
-                1] + "[" + str(new_exchange[0]) + "]. Please check password")
+                    1] + "[" + str(new_exchange[0]) + "]. Please check password")
 
 
     # [CURRENCY, PLACE, AMOUNT, PRICE, TYPE, NAME]
-    return render_template('dashboard.html', balances=balances, errors=errors)
+    total_btc = sum_all_balances(balances)
+    return render_template('dashboard.html', balances=balances, total_btc=total_btc, errors=errors)
 
 
 @app.route('/exchanges')
@@ -95,13 +97,34 @@ def exchanges_view():
     return render_template('exchanges.html', possible_exchanges=supported_exchanges, exchanges=all_exchanges )
 
 
+@app.route('/exchanges/remove/<id>')
+def exchanges_remove(id):
+    if request.referrer is not None and '/exchanges' in request.referrer:
+        keys.remove_key(id)
+    response = make_response(redirect("/exchanges"))
+    return response
+
+
+@app.route('/exchanges/new', methods=['GET', 'POST'])
+def exchanges_new():
+    if request.method == 'POST':
+        exchange = request.form['exchange']
+        public_key = request.form['public_key']
+        private_ley = request.form['private_key']
+
+        keys.save_keys(exchange, public_key, private_ley)
+
+    response = make_response(redirect("/exchanges"))
+
+    return response
+
+
 @app.route('/wallets')
 def wallets_view():
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
 
     all_wallets = []
     for wallet in currency.get_all_wallets():
-        print(wallet)
         tmp_wallet = []
         tmp_wallet.append(wallet[0])
         tmp_wallet.append(wallet[1])
@@ -114,40 +137,42 @@ def wallets_view():
     return render_template('wallets.html', possible_currency=supported_currency, wallets=all_wallets )
 
 
+@app.route('/wallets/remove/<id>')
+def wallets_remove(id):
+    if request.referrer is not None and '/wallets' in request.referrer:
+        wallets.remove_wallet(id)
+    response = make_response(redirect("/wallets"))
+    return response
 
-@app.route('/exchanges/remove/<id>')
-def exchanges_remove(id):
-    if request.referrer is not None and '/exchanges' in request.referrer:
-        keys.remove_key(id)
-    reponse = make_response(redirect("/exchanges"))
-    return reponse
 
 
-@app.route('/exchanges/new', methods=['GET', 'POST'])
-def exchanges_new():
+@app.route('/wallets/new', methods=['GET', 'POST'])
+def wallets_new():
     if request.method == 'POST':
-        exchange = request.form['exchange']
-        public_key = request.form['public_key']
-        private_ley = request.form['private_key']
+        currency = request.form['currency']
+        address = request.form['address'].split()
+        name = request.form['name']
 
-        keys.save_keys(exchange, public_key, private_ley)
+        for new_address in address:
+            wallets.save_wallet(currency, new_address, name)
 
-    reponse = make_response(redirect("/exchanges"))
-    return reponse
+    response = make_response(redirect("/wallets"))
+    return response
+
 
 
 @app.route('/use_password', methods=['GET', 'POST'])
 def use_password():
     if request.method == 'POST':
-        reponse = make_response(redirect(request.referrer))
+        response = make_response(redirect(request.referrer))
         hash_password = ''
         if 'clear' not in request.form and request.form['password'] != '':
             password = request.form['password'].encode('utf-8')
             hash_password = hashlib.sha256(password).hexdigest()
-            reponse.set_cookie('password', hash_password)
+            response.set_cookie('password', hash_password)
         else:
-            reponse.set_cookie('password', hash_password, expires=0)
-        return reponse
+            response.set_cookie('password', hash_password, expires=0)
+        return response
     else:
         return dashboard()
 
@@ -163,10 +188,31 @@ def utility_processor():
         password = request.cookies.get('password')
         return password[:5] + " [...] " + password[len(password) - 5:]
 
-    def check_if_pass():
-        if 'password' in request.cookies and request.cookies['password'] != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855':
-            return True
-        else:
-            return False
-
     return dict(get_pass_hash=get_pass_hash, check_if_pass=check_if_pass)
+
+
+def check_if_pass():
+    if 'password' in request.cookies and request.cookies['password'] != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855':
+        return True
+    else:
+        return False
+
+
+def sum_all_balances(balances):
+    sum = 0
+    for balance in balances:
+        sum += Decimal(balance[2]*balance[3])
+    return sum
+
+
+
+
+
+
+
+
+
+
+
+
+

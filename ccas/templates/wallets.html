@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% set active_page = "wallets" %}
+
+{% block content %}
+<h1>Wallets</h1>
+
+<table class="table table-condensed table-bordered table-hover" id="exchanges-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Currency</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    {% for element in wallets %}
+        <tr>
+            <td>{{ element[0] }}</td>
+            <td>{{ element[1] }}</td>
+            <td>{{ element[2] }}</td>
+            <td>{{ element[3] }}</td>
+            <td style="text-align: center;">
+                <a class="btn btn-danger" href="/wallets/remove/{{ element[0] }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <form action="/wallets/new" method="post" role="form">
+            <td>-</td>
+            <td>
+                <select class="form-control" name="currency">
+                    {% for currency in possible_currency %}
+                    <option>{{ currency }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="name"/>
+            </td>
+            <td>
+                You can pass multiple wallets in new lines:</br>
+                <textarea rows="3" cols="55" name="address"></textarea>
+            </td>
+            <td>
+                <button class="btn btn-warning btn-small"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </td>
+            </form>
+        </tr>
+</table>
+
+{% endblock %}
