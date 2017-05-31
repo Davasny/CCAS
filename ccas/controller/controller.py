@@ -68,9 +68,11 @@ def dashboard():
                     1] + "[" + str(new_exchange[0]) + "]. Please check password")
 
 
+    btc_price = exchanges.get_btc_price()
+
     # [CURRENCY, PLACE, AMOUNT, PRICE, TYPE, NAME]
     total_btc = sum_all_balances(balances)
-    return render_template('dashboard.html', balances=balances, total_btc=total_btc, errors=errors)
+    return render_template('dashboard.html', balances=balances, total_btc=total_btc, errors=errors, btc_price=btc_price)
 
 
 @app.route('/exchanges')
@@ -208,7 +210,7 @@ def groups_edit(group_id):
                     database.new_argument_query("INSERT INTO wallet_group (`wallet_id`,`group_id`) VALUES (?, ?) ;", args)
             database.new_argument_query("UPDATE groups SET `name`=? WHERE `id`=?;", (group_name, group_id))
             messages.append("Saved!")
-            
+
         elif 'cancel' in request.form:
             return make_response(redirect("/groups"))
 

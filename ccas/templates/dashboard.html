@@ -9,16 +9,16 @@
 
 {% block content %}
 <h2><small>Total BTC: </small>{{ total_btc|round(8) }}<small></small></h2>
-<h2><small>Total USD: </small> $7 501.08 <small>+0.5%</small></h2>
-<h2><small>Current BTC price:</small> $1 980.02 <small>-5%</small></h2>
-
+<h2><small>Total USD: </small>${{ (total_btc*btc_price)|round(2) }}<small></small></h2>
+<h2><small>Current BTC price: </small>${{ btc_price }}<small></small></h2>
+</br>
 {% include 'password_form.html' %}
 
 {% for message in errors%}
 <div class="alert alert-danger" role="alert">{{ message }}</div>
 {% endfor %}
 
-<table class="table table-condensed table-bordered table-hover" id="balances">
+<table class="table table-condensed table-bordered table-hover" id="data_table">
     <thead>
         <tr>
             <th>Currency</th>
@@ -34,7 +34,7 @@
 
             {% if element[4]=="CURRENCY" %}
 
-                {% if element[5]!='' and element[5] is not none%}
+                {% if element[5]!='' and element[5] is not none %}
                     {% set name = element[5] %}
                 {% else %}
                     {% set name = element[1] %}
