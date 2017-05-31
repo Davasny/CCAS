@@ -6,10 +6,6 @@ import urllib.request
 import json
 from decimal import *
 
-import collections
-
-from . import keys
-
 
 def get_balances(public_key, secret_key):
     return_reposne = {}
