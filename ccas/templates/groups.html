@@ -2,6 +2,11 @@
 {% block title %}Dashboard{% endblock %}
 {% set active_page = "groups" %}
 
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/datatables.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <h1>Groups</h1>
 
@@ -21,7 +26,7 @@
 </form>
 
 </br>
-<table class="table table-condensed table-bordered table-hover" id="exchanges-table">
+<table class="table table-condensed table-bordered table-hover data-table" id="data_table">
     <thead>
         <tr>
             <th>ID</th>
@@ -50,5 +55,4 @@
         </tr>
     {% endfor %}
 </table>
-
 {% endblock %}
