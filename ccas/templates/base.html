@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    {% block head %}
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %} - CCAS - CryptoCurrency Accounting System</title>
     <meta name="description" content="" />
@@ -17,7 +16,7 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" />
-    {% endblock %}
+    {% block head %}{% endblock %}
 </head>
 
 <body>

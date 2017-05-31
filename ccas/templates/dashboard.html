@@ -2,6 +2,11 @@
 {% block title %}Dashboard{% endblock %}
 {% set active_page = "dashboard" %}
 
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/datatables.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <h2><small>Total BTC: </small>{{ total_btc|round(8) }}<small></small></h2>
 <h2><small>Total USD: </small> $7 501.08 <small>+0.5%</small></h2>
@@ -13,7 +18,7 @@
 <div class="alert alert-danger" role="alert">{{ message }}</div>
 {% endfor %}
 
-<table class="table table-condensed table-bordered table-hover">
+<table class="table table-condensed table-bordered table-hover" id="balances">
     <thead>
         <tr>
             <th>Currency</th>
@@ -57,4 +62,9 @@
         </tr>
     {% endfor %}
 </table>
+<script>
+$('#balances').DataTable( {
+    paging: false
+} );
+</script>
 {% endblock %}
