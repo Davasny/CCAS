@@ -21,17 +21,30 @@
 <table class="table table-condensed table-bordered table-hover" id="data_table">
     <thead>
         <tr>
+            {% if columns_to_show['dash_show_currency_col'] %}
             <th>Currency</th>
+            {% endif %}
+            {% if columns_to_show['dash_show_place_col'] %}
             <th>Place</th>
+            {% endif %}
+            {% if columns_to_show['dash_show_amount_col'] %}
             <th>Amount</th>
+            {% endif %}
+            {% if columns_to_show['dash_show_price_col'] %}
             <th>Price</th>
+            {% endif %}
+            {% if columns_to_show['dash_show_total_col'] %}
             <th>Total</th>
+            {% endif %}
+            {% if columns_to_show['dash_show_usd_col'] %}
+            <th>Total in USD</th>
+            {% endif %}
         </tr>
     </thead>
     {% for element in balances %}
         <tr>
-            <td>{{ element[0]|upper }}</td>
-
+            {% if columns_to_show['dash_show_currency_col'] %}<td>{{ element[0]|upper }}</td>{% endif %}
+            {% if columns_to_show['dash_show_place_col'] %}
             {% if element[4]=="CURRENCY" %}
 
                 {% if element[5]!='' and element[5] is not none %}
@@ -57,10 +70,12 @@
             {% endif %}
 
             {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
+            {% endif %}
 
-            <td>{{ element[2]|round(8) }}</td>
-            <td>{{ element[3] }}</td>
-            <td>{{ (element[2]*element[3])|round(8) }}</td>
+            {% if columns_to_show['dash_show_amount_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]) }}</td>{% endif %}
+            {% if columns_to_show['dash_show_price_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[3]) }}</td>{% endif %}
+            {% if columns_to_show['dash_show_total_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*element[3]) }}</td>{% endif %}
+            {% if columns_to_show['dash_show_usd_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*element[3]*btc_price) }}</td>{% endif %}
         </tr>
     {% endfor %}
 </table>

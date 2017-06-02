@@ -1,0 +1,76 @@
+{% extends "base_settings.html" %}
+{% block sub_title %}Dashboard{% endblock %}
+
+{% block settings_content %}
+
+{% for message in messages %}
+<div class="alert alert-success" role="alert">{{ message }}</div>
+{% endfor %}
+
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h3 class="panel-title">Columns in dashboard</h3>
+    </div>
+    <div class="panel-body">
+        <form role="form" action="/settings" method="POST">
+            <div class="checkbox">
+                {% for element in columns_data %}
+                <label>
+                    {% if element[1] %}
+                        {% set checked = 'checked="checked"' %}
+                    {% else %}
+                        {% set checked = '' %}
+                    {% endif %}
+                    <input type="checkbox" value="on" {{ checked }} name="{{ element[0] }}">
+                    <input type='hidden' value="off" name='{{ element[0] }}'>
+                    {% if element[2]=='' %}
+                        {{ element[0] }}
+                    {% else %}
+                        {{ element[2] }}
+                    {% endif %}
+                </label></br>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="cols_setting" />
+            <div class="pull-left">
+                <button class="btn btn-success btn-small" type="submit" name="save">SAVE</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-danger btn-small" type="submit" name="cancel">CANCEL</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h3 class="panel-title">Prices</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-condensed table-bordered table-hover data-table" id="data_table">
+            <thead>
+                <tr>
+                    <th>Currency</th>
+                    <th>Exchange</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>BTC</td>
+                    <td>
+                        <select class="form-control">
+                            <option>BTC-e</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pull-left">
+            <button class="btn btn-success btn-small" type="submit" name="save">SAVE</button>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-danger btn-small" type="submit" name="cancel">CANCEL</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

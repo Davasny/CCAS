@@ -4,7 +4,7 @@ from ccas.models import currency, exchanges
 from ccas.models.exchanges import keys
 from flask import render_template, request, make_response, redirect
 from ccas.models.currency import wallets, groups
-from ccas.models import database
+from ccas.models import database, dashboard
 from decimal import *
 import configparser
 import hashlib
@@ -16,7 +16,7 @@ config.read("ccas/config.ini")
 
 @app.route('/')
 @app.route('/dashboard')
-def dashboard():
+def dashboard_view():
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
     balances = []
     errors = []
@@ -72,7 +72,10 @@ def dashboard():
 
     # [CURRENCY, PLACE, AMOUNT, PRICE, TYPE, NAME]
     total_btc = sum_all_balances(balances)
-    return render_template('dashboard.html', balances=balances, total_btc=total_btc, errors=errors, btc_price=btc_price)
+    columns_to_show = dashboard.get_column_to_show()
+
+    return render_template('dashboard.html', balances=balances, total_btc=total_btc, errors=errors, btc_price=btc_price,
+                           columns_to_show=columns_to_show)
 
 
 @app.route('/exchanges')
@@ -260,12 +263,37 @@ def use_password():
             response.set_cookie('password', hash_password, expires=0)
         return response
     else:
-        return dashboard()
+        return dashboard_view()
 
 
-@app.route('/settings')
+
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    return render_template('settings.html')
+    messages = []
+    if request.method == 'POST' and 'save' in request.form:
+        if 'cols_setting' in request.form:
+            for key, val in request.form.items():
+                if key != 'save':
+                    bool = True if val=="on" else False
+                    dashboard.update_column(key, bool)
+
+        elif 'prices_setting' in request.form:
+            a = 1
+
+    return render_template('settings_dashboard.html', columns_data=dashboard.get_columns_details(), messages=messages)
+
+
+
+@app.route('/settings/password')
+def settings_password():
+    return render_template('settings_password.html')
+
+
+
+@app.route('/settings/database')
+def settings_database():
+    return render_template('settings_database.html')
+
 
 
 @app.context_processor

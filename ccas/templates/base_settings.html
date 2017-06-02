@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% set active_page = "settings" %}
+
+{% block content %}
+
+<div class="row">
+
+    {% set navigation_bar = [
+        ('/settings', 'dashboard', 'Dashboard'),
+        ('/settings_password', 'password', 'Password'),
+        ('/settings_database', 'database', 'Database')
+    ] -%}
+    {% set active_page = active_page -%}
+
+
+    <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+              {% for href, id, caption in navigation_bar %}
+              <li {% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+              {% endfor %}
+          </ul>
+    </div>
+
+    <div class="col-sm-9 col-md-10">
+          <h1>{% block sub_title %}{% endblock %}</h1>
+            <div class="row placeholders  main">
+            {% block settings_content %}{% endblock %}
+          </div>
+        </div>
+</div>
+{% endblock %}
