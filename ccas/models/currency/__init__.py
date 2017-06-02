@@ -1,12 +1,13 @@
 from ccas.models import database
-from . import btc, eth
+from . import btc, eth, ltc
 
 def get_details(curerncy, list_of_addresses, type):
     if curerncy == "BTC" and type == "balance":
         return btc.get_balance(list_of_addresses)
-
     elif curerncy == "ETH" and type == "balance":
         return eth.get_balance(list_of_addresses)
+    elif curerncy == "LTC" and type == "balance":
+        return ltc.get_balance(list_of_addresses)
 
 
 def get_all_wallets(*args):

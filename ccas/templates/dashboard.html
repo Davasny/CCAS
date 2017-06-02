@@ -57,6 +57,8 @@
                     <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ name }}</a></td>
                 {% elif element[0]=="ETH" %}
                     <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ name }}</a></td>
+                {% elif element[0]=="LTC" %}
+                    <td><a href="http://ltc.blockr.io/address/info/{{ element[1] }}">{{ name }}</a></td>
                 {% endif %}
 
             {% elif element[4]=="EXCHANGE" %}
