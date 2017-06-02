@@ -3,42 +3,45 @@
 {% set active_page = "groups" %}
 
 {% block content %}
-<div class="row">
-    <div class="">
-        <div class="thumbnail">
-            <div class="caption">
-                <h1>Group #{{ group_id }}</h1>
-                {% for message in messages %}
-                <div class="alert alert-success" role="alert">{{ message }}</div>
-                {% endfor %}
-                <form role="form" action="/groups/edit/{{ group_id }}" method="POST">
-                <input name="name" type="text" class="form-control" placeholder="New name" required value="{{ group_name }}">
 
-                {% for element in all_wallets %}
-                <div class="checkbox">
-                    <label>
-                        {% if element[3] %}
-                            {% set checked = 'checked="checked"' %}
-                        {% else %}
-                            {% set checked = '' %}
-                        {% endif %}
-                        <input type="checkbox" {{ checked }} name="{{ element[0] }}">
-                        {% if element[1]=='' %}
-                            {{ element[2] }}
-                        {% else %}
-                            {{ element[1] }}
-                        {% endif %}
-                    </label>
-                </div>
-                {% endfor %}
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h2 class="panel-title">Settings for: Group #{{ group_id }}</h2>
+    </div>
+    <div class="panel-body">
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
+        <form role="form" action="/groups/edit/{{ group_id }}" method="POST">
+        <input name="name" type="text" class="form-control" placeholder="New name" required value="{{ group_name }}">
 
-                <p>
-                    <button class="btn btn-danger btn-small" type="submit" name="cancel">CANCEL</button>
-                    <button class="btn btn-success btn-small" type="submit" name="save">SAVE</button>
-                </p>
-                </form>
-            </div>
+        {% for element in all_wallets %}
+        <div class="checkbox">
+            <label>
+                {% if element[3] %}
+                    {% set checked = 'checked="checked"' %}
+                {% else %}
+                    {% set checked = '' %}
+                {% endif %}
+                <input type="checkbox" {{ checked }} name="{{ element[0] }}">
+                {% if element[1]=='' %}
+                    {{ element[2] }}
+                {% else %}
+                    {{ element[1] }}
+                {% endif %}
+            </label>
         </div>
+        {% endfor %}
+
+        <p>
+            <div class="pull-left">
+                <button class="btn btn-success btn-small" type="submit" name="save">SAVE</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-danger btn-small" type="submit" name="cancel">CANCEL</button>
+            </div>
+        </p>
+        </form>
     </div>
 </div>
 {% endblock %}
