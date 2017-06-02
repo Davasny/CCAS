@@ -103,12 +103,14 @@ def exchanges_view():
     return render_template('exchanges.html', possible_exchanges=supported_exchanges, exchanges=all_exchanges )
 
 
+
 @app.route('/exchanges/remove/<id>')
 def exchanges_remove(id):
     if request.referrer is not None and '/exchanges' in request.referrer:
         keys.remove_key(id)
     response = make_response(redirect("/exchanges"))
     return response
+
 
 
 @app.route('/exchanges/new', methods=['GET', 'POST'])
@@ -123,6 +125,7 @@ def exchanges_new():
     response = make_response(redirect("/exchanges"))
 
     return response
+
 
 
 @app.route('/wallets')
@@ -143,12 +146,14 @@ def wallets_view():
     return render_template('wallets.html', possible_currency=supported_currency, wallets=all_wallets )
 
 
+
 @app.route('/wallets/remove/<id>')
 def wallets_remove(id):
     if request.referrer is not None and '/wallets' in request.referrer:
         wallets.remove_wallet(id)
     response = make_response(redirect("/wallets"))
     return response
+
 
 
 @app.route('/wallets/new', methods=['GET', 'POST'])
@@ -163,6 +168,7 @@ def wallets_new():
 
     response = make_response(redirect("/wallets"))
     return response
+
 
 
 @app.route('/groups')
@@ -239,6 +245,7 @@ def groups_edit(group_id):
         return render_template('groups_edit.html', group_id=group_id, all_wallets=all_wallets, group_name=group_name, messages=messages)
     else:
         return make_response(redirect("/groups"))
+
 
 
 @app.route('/groups/remove/<id>')

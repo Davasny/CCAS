@@ -38,7 +38,6 @@ def get_balances(public_key, secret_key):
 
         i = 0
         for currency, value in tmp_parsed.items():
-            print(currency)
             all_balances[i][0] = currency
             all_balances[i][1] = "Bittrex"
             all_balances[i][2] = round(Decimal(value), 8)

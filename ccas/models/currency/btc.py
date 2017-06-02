@@ -29,7 +29,7 @@ def get_balance(list_of_address):
     for address in parsed:
         all_balances[i][0] = "BTC"
         all_balances[i][1] = address
-        all_balances[i][2] = parsed[address]['final_balance'] / (10**8)
+        all_balances[i][2] = Decimal(parsed[address]['final_balance'] / (10**8))
         all_balances[i][3] = 1
         all_balances[i][4] = "CURRENCY"
 
