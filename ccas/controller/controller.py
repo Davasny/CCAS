@@ -24,7 +24,14 @@ def dashboard_view():
     tmp_group = []
     for new_currency in supported_currency:
         all_wallets = wallets.get_addresses_with_names(new_currency) # wallets without group
-        balances.extend(currency.get_details(new_currency, all_wallets, "balance"))
+
+        if all_wallets:
+            new_response = currency.get_details(new_currency, all_wallets, "balance")
+            if True in new_response.values():
+                balances.extend(new_response["data"])
+                print(new_response["data"])
+            else:
+                errors.append("Something went wrong with " + new_currency + " - " + str(new_response['msg']))
 
         all_groups = groups.get_groups_for(new_currency)
 
