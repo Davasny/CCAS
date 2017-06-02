@@ -17,6 +17,12 @@ config.read("ccas/config.ini")
 @app.route('/')
 @app.route('/dashboard')
 def dashboard_view():
+    return render_template('dashboard.html')
+
+
+
+@app.route('/dashboard_content')
+def dashboard_content():
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
     balances = []
     errors = []
@@ -29,7 +35,6 @@ def dashboard_view():
             new_response = currency.get_details(new_currency, all_wallets, "balance")
             if True in new_response.values():
                 balances.extend(new_response["data"])
-                print(new_response["data"])
             else:
                 errors.append("Something went wrong with " + new_currency + " - " + str(new_response['msg']))
 
@@ -81,7 +86,7 @@ def dashboard_view():
     total_btc = sum_all_balances(balances)
     columns_to_show = dashboard.get_column_to_show()
 
-    return render_template('dashboard.html', balances=balances, total_btc=total_btc, errors=errors, btc_price=btc_price,
+    return render_template('dashboard_content.html', balances=balances, total_btc=total_btc, errors=errors, btc_price=btc_price,
                            columns_to_show=columns_to_show)
 
 

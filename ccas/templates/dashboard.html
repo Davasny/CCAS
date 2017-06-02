@@ -2,85 +2,32 @@
 {% block title %}Dashboard{% endblock %}
 {% set active_page = "dashboard" %}
 
-{% block head %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/datatables.min.js"></script>
-{% endblock %}
 
 {% block content %}
-<h2><small>Total BTC: </small>{{ total_btc|round(8) }}<small></small></h2>
-<h2><small>Total USD: </small>${{ (total_btc*btc_price)|round(2) }}<small></small></h2>
-<h2><small>Current BTC price: </small>${{ btc_price }}<small></small></h2>
-</br>
-{% include 'password_form.html' %}
+<button type="button" class="btn btn-info" aria-label="Left Align" id="refresh">
+    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+    REFRESH
+    <label class="small_loader"></label>
+</button>
 
-{% for message in errors%}
-<div class="alert alert-danger" role="alert">{{ message }}</div>
-{% endfor %}
+<div class="loader"></div>
+<div id="dashboard_content"></div>
+<script>
+$( document ).ready(function() {
+    $('.small_loader').css("display", "none");
+    load_page();
 
-<table class="table table-condensed table-bordered table-hover" id="data_table">
-    <thead>
-        <tr>
-            {% if columns_to_show['dash_show_currency_col'] %}
-            <th>Currency</th>
-            {% endif %}
-            {% if columns_to_show['dash_show_place_col'] %}
-            <th>Place</th>
-            {% endif %}
-            {% if columns_to_show['dash_show_amount_col'] %}
-            <th>Amount</th>
-            {% endif %}
-            {% if columns_to_show['dash_show_price_col'] %}
-            <th>Price</th>
-            {% endif %}
-            {% if columns_to_show['dash_show_total_col'] %}
-            <th>Total</th>
-            {% endif %}
-            {% if columns_to_show['dash_show_usd_col'] %}
-            <th>Total in USD</th>
-            {% endif %}
-        </tr>
-    </thead>
-    {% for element in balances %}
-        <tr>
-            {% if columns_to_show['dash_show_currency_col'] %}<td>{{ element[0]|upper }}</td>{% endif %}
-            {% if columns_to_show['dash_show_place_col'] %}
-            {% if element[4]=="CURRENCY" %}
+    $('#refresh').click(function() {
+        $('.small_loader').css("display", "inline-block");
+        load_page();
+    });
+});
 
-                {% if element[5]!='' and element[5] is not none %}
-                    {% set name = element[5] %}
-                {% else %}
-                    {% set name = element[1] %}
-                {% endif %}
-
-                {% if element[0]=="BTC" %}
-                    <td><a href="https://blockchain.info/en/address/{{ element[1] }}">{{ name }}</a></td>
-                {% elif element[0]=="ETH" %}
-                    <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ name }}</a></td>
-                {% elif element[0]=="LTC" %}
-                    <td><a href="http://ltc.blockr.io/address/info/{{ element[1] }}">{{ name }}</a></td>
-                {% endif %}
-
-            {% elif element[4]=="EXCHANGE" %}
-                {% if element[1]=="Poloniex" %}
-                    <td><a href="https://poloniex.com/balances">{{ element[1] }}</a></td>
-                {% elif element[1]=="BTC-e" %}
-                    <td><a href="https://btc-e.com/profile#funds">{{ element[1] }}</a></td>
-                {% elif element[1]=="Bittrex" %}
-                    <td><a href="https://bittrex.com/Balances">{{ element[1] }}</a></td>
-                {% elif element[1]=="Bitfinex" %}
-                    <td><a href="https://www.bitfinex.com/wallets">{{ element[1] }}</a></td>
-                {% endif %}
-            {% endif %}
-
-            {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
-            {% endif %}
-
-            {% if columns_to_show['dash_show_amount_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]) }}</td>{% endif %}
-            {% if columns_to_show['dash_show_price_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[3]) }}</td>{% endif %}
-            {% if columns_to_show['dash_show_total_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*element[3]) }}</td>{% endif %}
-            {% if columns_to_show['dash_show_usd_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*element[3]*btc_price) }}</td>{% endif %}
-        </tr>
-    {% endfor %}
-</table>
+function load_page(){
+    $("#dashboard_content").load("/dashboard_content", function() {
+        $('.loader').hide();
+        $('.small_loader').css("display", "none");
+    });
+}
+</script>
 {% endblock %}
