@@ -6,10 +6,13 @@ Program written in Pyton3.6 with Flask
 ## To do: 
 - [ ] Coinmarketcap
 - [ ] Select exchange for price check
-- [ ] Nice loading animation in dashboard
-- [ ] User settings (port, password, balance)
+- [ ] Change port in settings
 - [ ] Save history of previous prices
 - [ ] Set interval between checking data
+- [ ] Change password option
+- [X] Nice loading animation in dashboard
+- [X] Slect dashboard columns to show
+- [X] Sort data in dashboard
 - [X] Check price for each currency
 - [X] User firendly Web GUI
 - [X] Count summary in BTC and USD
@@ -23,7 +26,7 @@ Program written in Pyton3.6 with Flask
 - [X] Poloniex
 - [X] BTC-e
 - [X] Bittrex
-- [ ] Bitfinex
+- [X] Bitfinex
 - [ ] BitShares
 - [ ] Kraken
 - [ ] Liqui
@@ -33,7 +36,8 @@ Program written in Pyton3.6 with Flask
 ## Currency to add:
 - [X] BTC
 - [X] ETH
-- [ ] LTC
+- [X] LTC
+- [ ] ERC20
 - [ ] ETC
 - [ ] DASH
 - [ ] XMR
