@@ -1,4 +1,4 @@
-from . import poloniex, btc_e, bittrex
+from . import poloniex, btc_e, bittrex, bitfinex
 from ccas.models import database
 
 def get_balances(exchange, public_key, secret_key):
@@ -8,6 +8,8 @@ def get_balances(exchange, public_key, secret_key):
         return btc_e.get_balances(public_key, secret_key)
     if exchange == "bittrex":
         return bittrex.get_balances(public_key, secret_key)
+    if exchange == "bitfinex":
+        return bitfinex.get_balances(public_key, secret_key)
 
 def get_exchanges():
     response = database.new_query("SELECT id, exchange FROM exchanges_api_keys;")
