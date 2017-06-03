@@ -290,3 +290,5 @@ layout/
 file_hierarchy.txt
 *.db
 *.zip
+runserver.spec
+ccas/cmcTempFile.json
