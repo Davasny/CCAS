@@ -140,6 +140,7 @@ def exchanges_new():
 
 
 
+######### WALLETS #########
 @app.route('/wallets')
 def wallets_view():
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
@@ -180,9 +181,11 @@ def wallets_new():
 
     response = make_response(redirect("/wallets"))
     return response
+######### WALLETS #########
 
 
 
+######### GROUPS #########
 @app.route('/groups')
 def groups_view():
     supported_currency = config["Currency"]["supportedCurrency"].split(",")
@@ -221,7 +224,6 @@ def groups_edit(group_id):
     if request.referrer is not None and '/groups' in request.referrer:
         messages = []
         if 'save' in request.form:
-            #print(request.form) # ImmutableMultiDict([('name', 'BTC_GROUP'), ('24', 'on'), ('25', 'on'), ('save', '')])
             group_name = request.form['name']
             args = (group_id,)
             database.new_argument_query("DELETE FROM wallet_group WHERE group_id=?", args)
@@ -266,9 +268,11 @@ def groups_remove(id):
         groups.remove_group(id)
     response = make_response(redirect("/groups"))
     return response
+######### GROUPS #########
 
 
 
+######### PASSWORD #########
 @app.route('/use_password', methods=['GET', 'POST'])
 def use_password():
     if request.method == 'POST':
@@ -283,13 +287,15 @@ def use_password():
         return response
     else:
         return dashboard_view()
+######### PASSWORD #########
 
 
 
+######### SETTINGS #########
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     messages = []
-    if request.method == 'POST' and 'save' in request.form:
+    if request.method == 'POST' and 'cols_save' in request.form:
         if 'cols_setting' in request.form:
             for key, val in request.form.items():
                 if key != 'save':
@@ -367,6 +373,7 @@ def settings_password():
 def settings_database():
     return render_template('settings_database.html')
 
+######### SETTINGS #########
 
 
 @app.context_processor
@@ -388,18 +395,7 @@ def check_if_pass():
 def sum_all_balances(balances):
     sum = 0
     for balance in balances:
-        sum += Decimal(balance[2]*balance[3])
+        if balance[3] != -1:
+            sum += Decimal(balance[2]*balance[3])
     return sum
-
-
-
-
-
-
-
-
-
-
-
-
 
