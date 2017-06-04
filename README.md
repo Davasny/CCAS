@@ -1,57 +1,40 @@
 # CCAS - CryptoCurrency Accounting System
 
-## General information 
-Program written in Pyton3.6 with Flask
+CCAS is a program to automate checking balances on many wallets and exchanges. It supports checking prices and counting summary balances in BTC and USD.
 
-## Installation
-- Install packages from requirements `pip install something`
+## First run
+
+- Install required packages:
+```
+pip install Flask
+pip install pycryptodome
+```
 - Run `runserver.py`
-- Open browser http://localhost:5000/
+- Open browser default on http://localhost:5000/
 
-## Usage
-~~Password typed in dashboard will be hashed and putted into cookie - this password will be used to encrypt and decrypt all api keys. **Password can not be changed later without recreating API keys**~~
+## Optional parameters for `runserver.py`
+```
+  -h, --help            help
+  -H HOST, --host=HOST  Hostname/IP of CCAS [default localhost]
+  -P PORT, --port=PORT  Port for the CCAS [default 5000]
+```
+
 
 ## To do: 
 - [ ] Set interval between checking data
 - [ ] Reset database to default
 - [ ] Add history
-- [X] Change password option
-- [X] First run script
-- [X] Set new port as argument
-- [X] Coinmarketcap
-- [X] Select exchange for price check
-- [X] Nice loading animation in dashboard
-- [X] Slect dashboard columns to show
-- [X] Sort data in dashboard
-- [X] Check price for each currency
-- [X] User firendly Web GUI
-- [X] Support for USDT
-- [X] Count summary in BTC and USD
-- [x] Check balances on exchanges
-- [X] Group many addresses into one group
-- [X] Password protection
-- [x] Check balances on wallets
 
 
-## Exchanges to add:
+## Supported exchanges:
 - [X] Poloniex
 - [X] BTC-e
 - [X] Bittrex
 - [X] Bitfinex
-- [ ] BitShares
-- [ ] Kraken
-- [ ] Liqui
-- [ ] Bitstamp - verification for api
 
 
-## Currency to add:
+## Supported currency:
 - [X] BTC
 - [X] ETH
 - [X] LTC
 - [X] ERC20
-- [ ] ETC
-- [ ] DASH
-- [ ] XMR
-- [ ] BTS
-- [ ] ZEC
-- [ ] DOGE
