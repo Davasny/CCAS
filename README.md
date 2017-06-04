@@ -8,6 +8,8 @@ Program written in Pyton3.6 with Flask
 - [ ] Save history of previous prices
 - [ ] Set interval between checking data
 - [ ] Change password option
+- [ ] First run script
+- [ ] Reset database to default
 - [X] Coinmarketcap
 - [X] Select exchange for price check
 - [X] Nice loading animation in dashboard
@@ -37,7 +39,7 @@ Program written in Pyton3.6 with Flask
 - [X] BTC
 - [X] ETH
 - [X] LTC
-- [ ] ERC20
+- [X] ERC20
 - [ ] ETC
 - [ ] DASH
 - [ ] XMR
