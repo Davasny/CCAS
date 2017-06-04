@@ -23,7 +23,8 @@ def flaskrun(default_host="localhost",
     app.run(
         debug=options.debug,
         host=options.host,
-        port=int(options.port)
+        port=int(options.port),
+        threaded=True
     )
 
 
