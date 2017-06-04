@@ -17,6 +17,7 @@ Program written in Pyton3.6 with Flask
 - [X] Sort data in dashboard
 - [X] Check price for each currency
 - [X] User firendly Web GUI
+- [X] Support for USDT
 - [X] Count summary in BTC and USD
 - [x] Check balances on exchanges
 - [X] Group many addresses into one group
