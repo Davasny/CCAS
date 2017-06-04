@@ -85,8 +85,12 @@ def get_last_nonce(public_key, secret_key):
 
 
 def get_price(currency):
-    raw_json = urllib.request.urlopen('https://btc-e.com/api/3/ticker/' + currency.lower() + '_btc')
-    return Decimal(json.loads(raw_json.read().decode('utf-8'))[currency.lower() + '_btc']['buy'])
+    try:
+        raw_json = urllib.request.urlopen('https://btc-e.com/api/3/ticker/' + currency.lower() + '_btc')
+        price = Decimal(json.loads(raw_json.read().decode('utf-8'))[currency.lower() + '_btc']['buy'])
+    except:
+        price = -1
+    return price
 
 
 def get_btc_price():

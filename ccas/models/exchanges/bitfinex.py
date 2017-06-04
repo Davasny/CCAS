@@ -72,8 +72,12 @@ def get_balances(public_key, secret_key):
 
 
 def get_price(currency):
-    raw_json = urllib.request.urlopen('https://api.bitfinex.com/v1/pubticker/' + currency + 'btc')
-    return Decimal(json.loads(raw_json.read().decode('utf-8'))["ask"])
+    try:
+        raw_json = urllib.request.urlopen('https://api.bitfinex.com/v1/pubticker/' + currency + 'btc')
+        price = Decimal(json.loads(raw_json.read().decode('utf-8'))["ask"])
+    except:
+        price = -1
+    return price
 
 
 def get_btc_price():

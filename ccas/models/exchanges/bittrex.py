@@ -60,5 +60,9 @@ def get_balances(public_key, secret_key):
 
 
 def get_price(currency):
-    raw_json = urllib.request.urlopen('https://bittrex.com/api/v1.1/public/getticker?market=btc-' + currency.lower())
-    return Decimal(json.loads(raw_json.read().decode('utf-8'))['result']['Ask'])
+    try:
+        raw_json = urllib.request.urlopen('https://bittrex.com/api/v1.1/public/getticker?market=btc-' + currency.lower())
+        price = Decimal(json.loads(raw_json.read().decode('utf-8'))['result']['Ask'])
+    except:
+        price = -1
+    return price

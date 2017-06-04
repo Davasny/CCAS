@@ -61,5 +61,9 @@ def get_all_prices():
     return json.loads(raw_json.read().decode('utf-8'))
 
 def get_price(currency):
-    raw_json = urllib.request.urlopen('https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_'+ currency +'&depth=1')
-    return Decimal(json.loads(raw_json.read().decode('utf-8'))["asks"][0][0])
+    try:
+        raw_json = urllib.request.urlopen('https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_'+ currency +'&depth=1')
+        price = Decimal(json.loads(raw_json.read().decode('utf-8'))["asks"][0][0])
+    except:
+        price = -1
+    return price
