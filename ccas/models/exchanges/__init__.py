@@ -18,10 +18,19 @@ def get_exchanges():
 
 
 def get_btc_price():
-    exchange = database.new_query("SELECT value FROM settings WHERE name='exchange_price_btc';")
-    if exchange[0][0] == "btc-e":
-        btc_price = btc_e.get_btc_price()
-    return round(btc_price,2)
+    exchange = database.new_query("SELECT `exchange` FROM `coins_prices` WHERE `name`='btc';")
+    if exchange:
+        exchange = exchange[0][0]
+        if exchange == "poloniex":
+            return poloniex.get_btc_price()
+        if exchange == "btc-e":
+            return btc_e.get_btc_price()
+        if exchange == "bittrex":
+            return bittrex.get_btc_price()
+        if exchange == "bitfinex":
+            return bitfinex.get_btc_price()
+    else:
+        return -1
 
 
 def get_price(currency):

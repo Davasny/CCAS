@@ -1,6 +1,6 @@
 <h2><small>Total BTC: </small>{{ total_btc|round(8) }}<small></small></h2>
 <h2><small>Total USD: </small>${{ (total_btc*btc_price)|round(2) }}<small></small></h2>
-<h2><small>Current BTC price: </small>${{ btc_price }}<small></small></h2>
+<h2><small>Current BTC price: </small>${{ btc_price|round(2) }}<small></small></h2>
 </br>
 {% include 'password_form.html' %}
 

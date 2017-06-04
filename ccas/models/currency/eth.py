@@ -26,7 +26,7 @@ def get_balance(list_of_address):
 
         tmp_balances.append("ETH")
         tmp_balances.append(parsed['address'])
-        tmp_balances.append(Decimal(parsed['ETH']['balance']) / (10**18))
+        tmp_balances.append(Decimal(parsed['ETH']['balance']))
         tmp_balances.append(price)
         tmp_balances.append("CURRENCY")
 
