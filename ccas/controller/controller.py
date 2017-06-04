@@ -4,7 +4,7 @@ from ccas.models import currency, exchanges
 from ccas.models.exchanges import keys
 from flask import render_template, request, make_response, redirect
 from ccas.models.currency import wallets, groups
-from ccas.models import database, dashboard
+from ccas.models import database, dashboard, coinmarketcap
 from decimal import *
 import configparser
 import hashlib
@@ -298,9 +298,63 @@ def settings():
 
         elif 'prices_setting' in request.form:
             a = 1
+    elif request.method == 'POST' and 'prices_save' in request.form:
+        for key, val in request.form.items():
+            if 'save' not in key:
+                val = 'coinmarketcap' if 'CMC' in val else val
+                currency.update_coin_prices_settings(key.lower(), val)
 
-    return render_template('settings_dashboard.html', columns_data=dashboard.get_columns_details(), messages=messages)
 
+    all_currency = list(config["Currency"]["supportedCurrency"].split(","))
+    all_exchanges = list(config["Exchanges"]["supportedExchanges"].split(","))
+    all_exchanges.sort()
+
+    for new_currency in coinmarketcap.get_all_settings():
+        all_exchanges.append('CMC_' + new_currency[1])
+
+    for new_currency in currency.get_coin_prices_settings():
+        if new_currency[1].upper() not in all_currency:
+            all_currency.append(new_currency[1].upper())
+
+
+    known_currecy={} # {'BTC':'bitfinex', 'LTC':'btc-e'}
+    for new_currency in currency.get_coin_prices_settings():
+        if new_currency[1].upper() in all_currency:
+            if new_currency[2] == 'coinmarketcap':
+                known_currecy[new_currency[1].upper()] = 'CMC_' + new_currency[1]
+            else:
+                known_currecy[new_currency[1].upper()] = new_currency[2]
+
+    return render_template('settings_dashboard.html', columns_data=dashboard.get_columns_details(), all_currency=all_currency, all_exchanges=all_exchanges, known_currecy=known_currecy, messages=messages)
+
+
+
+######### SETTINGS CMC #########
+@app.route('/settings_coinmarketcap')
+def settings_coinmarketcap():
+    all_settings = coinmarketcap.get_all_settings()
+    return render_template('settings_coinmarketcap.html', all_settings=all_settings)
+
+
+@app.route('/settings_coinmarketcap/new', methods=['GET', 'POST'])
+def settings_coinmarketcap_new():
+    if request.method == 'POST':
+        currency = request.form['currency']
+        cmc_link = request.form['cmc_link']
+        cmc_id = (cmc_link if cmc_link[-1:]!="/" else cmc_link[:-1]).split("/")[-1]
+
+        coinmarketcap.create_new_currency(currency, cmc_id)
+
+    return make_response(redirect("/settings_coinmarketcap"))
+
+
+@app.route('/settings_coinmarketcap/remove/<id>')
+def settings_coinmarketcap_remove(id):
+    if request.referrer is not None and '/settings_coinmarketcap' in request.referrer:
+        coinmarketcap.remove_currency(id)
+    response = make_response(redirect("/settings_coinmarketcap"))
+    return response
+######### SETTINGS CMC #########
 
 
 @app.route('/settings/password')
