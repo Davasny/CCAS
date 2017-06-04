@@ -5,6 +5,7 @@ import urllib
 import urllib.request
 import json
 from decimal import *
+from ccas.models import exchanges
 
 
 def get_balances(public_key, secret_key):
@@ -40,8 +41,10 @@ def get_balances(public_key, secret_key):
             all_balances[i][1] = "Poloniex"
             all_balances[i][2] = Decimal(value)
 
-            if currency != "BTC":
+            if currency != "BTC" and currency != "USDT":
                 all_balances[i][3] = Decimal(all_prices["BTC_" + currency]["highestBid"])
+            elif currency == "USDT":
+                all_balances[i][3] = round(1/exchanges.get_btc_price(), 8)
             else:
                 all_balances[i][3] = 1
 
@@ -67,3 +70,12 @@ def get_price(currency):
     except:
         price = -1
     return price
+
+def get_btc_price():
+    try:
+        raw_json = urllib.request.urlopen('https://poloniex.com/public?command=returnOrderBook&currencyPair=USDT_BTC&depth=1')
+        price = Decimal(json.loads(raw_json.read().decode('utf-8'))["asks"][0][0])
+    except:
+        price = -1
+    return price
+

@@ -5,6 +5,7 @@ import urllib
 import urllib.request
 import json
 from decimal import *
+from ccas.models import exchanges
 
 
 def get_balances(public_key, secret_key):
@@ -46,7 +47,7 @@ def get_balances(public_key, secret_key):
             if currency != "btc" and currency != 'usd':
                 all_balances[i][3] = round(get_price(currency), 8)
             elif currency == "usd":
-                all_balances[i][3] = round(1/get_btc_price(), 8)
+                all_balances[i][3] = round(1/exchanges.get_btc_price(), 8)
             else:
                 all_balances[i][3] = 1
 

@@ -5,6 +5,7 @@ import urllib
 import urllib.request
 import json
 from decimal import *
+from ccas.models import exchanges
 
 
 def get_balances(public_key, secret_key):
@@ -42,8 +43,10 @@ def get_balances(public_key, secret_key):
             all_balances[i][1] = "Bittrex"
             all_balances[i][2] = round(Decimal(value), 8)
 
-            if currency != "BTC":
+            if currency != "BTC" and currency != "USDT":
                 all_balances[i][3] = round(get_price(currency), 8)
+            elif currency == "USDT":
+                all_balances[i][3] = round(1 / exchanges.get_btc_price(), 8)
             else:
                 all_balances[i][3] = 1
 
@@ -62,6 +65,15 @@ def get_balances(public_key, secret_key):
 def get_price(currency):
     try:
         raw_json = urllib.request.urlopen('https://bittrex.com/api/v1.1/public/getticker?market=btc-' + currency.lower())
+        price = Decimal(json.loads(raw_json.read().decode('utf-8'))['result']['Ask'])
+    except:
+        price = -1
+    return price
+
+
+def get_btc_price():
+    try:
+        raw_json = urllib.request.urlopen('https://bittrex.com/api/v1.1/public/getticker?market=usdt-btc')
         price = Decimal(json.loads(raw_json.read().decode('utf-8'))['result']['Ask'])
     except:
         price = -1
