@@ -23,7 +23,6 @@ pip install pycryptodome
 ## To do: 
 - [ ] Set interval between checking data
 - [ ] Reset database to default
-- [ ] Add history
 
 
 ## Supported exchanges:
@@ -38,3 +37,10 @@ pip install pycryptodome
 - [X] ETH
 - [X] LTC
 - [X] ERC20
+
+
+## Donations
+You can appreciate my work on CCAS by sending me something for beer (I promise to spend most money on beer and show you that ;)
+- BTC `1JdPUakQaMnKtXEsJqNBy78Efse7adSiPG`
+- ETH `0xd5bde789E9Ce5fBf16e47600D5aDc845178efF8B`
+- LTC `LU3Y3q3HAPjT5Q4pxym43XpZUWR68LHVpL`
