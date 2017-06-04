@@ -7,50 +7,61 @@ from ccas.models import exchanges
 
 def get_balance(list_of_address):
     return_reposne = {}
-    try:
-        string_of_addresses = ''
+    #try:
+    if isinstance(list_of_address[0], list):
+        use_names = True
+    else:
+        use_names = False
 
-        if isinstance(list_of_address[0], list):
-            use_names = True
-        else:
-            use_names = False
+    all_balances = []
 
-        for address in list_of_address:
-            if use_names:
-                string_of_addresses = address[0] + ',' + string_of_addresses
-            else:
-                string_of_addresses = address + ',' + string_of_addresses
-
+    for address in list_of_address:
+        tmp_balances = []
 
         raw_json = urllib.request.urlopen(
-            'https://api.etherscan.io/api?module=account&action=balancemulti&address=' + string_of_addresses[:-1])
-        parsed = json.loads(raw_json.read().decode('utf-8'))['result']
+            'https://api.ethplorer.io/getAddressInfo/' + address[0] + '?apiKey=freekey')
+        parsed = json.loads(raw_json.read().decode('utf-8'))
 
-        all_balances = [([0] * 6) for i in range(len(parsed))]
+        price = exchanges.get_price("ETH")
 
-        price = get_price()
+        tmp_balances.append("ETH")
+        tmp_balances.append(parsed['address'])
+        tmp_balances.append(Decimal(parsed['ETH']['balance']) / (10**18))
+        tmp_balances.append(price)
+        tmp_balances.append("CURRENCY")
 
-        i = 0
-        for account in parsed:
-            all_balances[i][0] = "ETH"
-            all_balances[i][1] = account['account']
-            all_balances[i][2] = Decimal(account['balance']) / (10**18)
-            all_balances[i][3] = price
-            all_balances[i][4] = "CURRENCY"
+        if use_names:
+            tmp_balances.append(address[1])
+        else:
+            tmp_balances.append('')
 
-            if use_names:
-                all_balances[i][5] = list_of_address[i][1]
-            else:
-                all_balances[i][5] = ''
 
-        return_reposne["status"] = True
-        return_reposne["data"] = all_balances
+        all_balances.append(tmp_balances)
+        tmp_balances = []
+        if 'tokens' in parsed:
+            for token_data in parsed['tokens']:
+                price = exchanges.get_price(token_data['tokenInfo']['symbol'])
 
-    except Exception as e:
-        return_reposne["status"] = False
-        return_reposne["msg"] = e
+                tmp_balances.append(token_data['tokenInfo']['symbol'])
+                tmp_balances.append(parsed['address'])
+                tmp_balances.append(Decimal(token_data['balance']) / (10 ** Decimal(token_data['tokenInfo']['decimals'])))
+                tmp_balances.append(price)
+                tmp_balances.append("CURRENCY-ETH_TOKEN")
+
+                if use_names:
+                    tmp_balances.append(address[1])
+                else:
+                    tmp_balances.append('')
+
+                all_balances.append(tmp_balances)
+
+
+    return_reposne["status"] = True
+    return_reposne["data"] = all_balances
+
+
+    #except Exception as e:
+    #    return_reposne["status"] = False
+    #    return_reposne["msg"] = e
 
     return return_reposne
-
-def get_price():
-    return exchanges.get_price("ETH")
