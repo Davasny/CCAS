@@ -1,0 +1,41 @@
+PRAGMA foreign_keys = off;
+BEGIN TRANSACTION;
+
+-- Table: cmc_currency_settings
+CREATE TABLE cmc_currency_settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, id_on_cmc TEXT);
+INSERT INTO cmc_currency_settings (id, name, id_on_cmc) VALUES (1, 'gnt', 'golem-network-tokens');
+
+-- Table: coins_prices
+CREATE TABLE coins_prices (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, exchange TEXT);
+INSERT INTO coins_prices (id, name, exchange) VALUES (1, 'eth', 'poloniex');
+INSERT INTO coins_prices (id, name, exchange) VALUES (2, 'btc', 'btc-e');
+INSERT INTO coins_prices (id, name, exchange) VALUES (4, 'ltc', 'poloniex');
+INSERT INTO coins_prices (id, name, exchange) VALUES (3, 'gnt', 'coinmarketcap');
+
+-- Table: exchanges_api_keys
+CREATE TABLE exchanges_api_keys (id INTEGER PRIMARY KEY AUTOINCREMENT, exchange TEXT, public_key TEXT, private_key TEXT, last_nonce INTEGER);
+
+-- Table: groups
+CREATE TABLE groups (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, currency VARCHAR);
+
+-- Table: history
+CREATE TABLE history (id INTEGER PRIMARY KEY AUTOINCREMENT, currency VARCHAR, amount DECIMAL, price DECIMAL, timestamp TIME, type TEXT);
+
+-- Table: settings
+CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, value TEXT, description TEXT);
+INSERT INTO settings (id, name, value, description) VALUES (1, 'password_set', 'False', 'Was the password set for the first time?');
+INSERT INTO settings (id, name, value, description) VALUES (2, 'dash_show_currency_col', 'True', 'Currency name column');
+INSERT INTO settings (id, name, value, description) VALUES (3, 'dash_show_place_col', 'True', 'Place column');
+INSERT INTO settings (id, name, value, description) VALUES (4, 'dash_show_amount_col', 'True', 'Amount column');
+INSERT INTO settings (id, name, value, description) VALUES (5, 'dash_show_price_col', 'True', 'Price column');
+INSERT INTO settings (id, name, value, description) VALUES (6, 'dash_show_total_col', 'True', 'Total column');
+INSERT INTO settings (id, name, value, description) VALUES (7, 'dash_show_usd_col', 'True', 'USD column');
+
+-- Table: wallet_group
+CREATE TABLE wallet_group (id INTEGER PRIMARY KEY AUTOINCREMENT, wallet_id INTEGER, group_id INTEGER);
+
+-- Table: wallets
+CREATE TABLE wallets (id INTEGER PRIMARY KEY AUTOINCREMENT, currency VARCHAR, address TEXT, name TEXT, parent_group INTEGER);
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;

@@ -4,12 +4,12 @@
 Program written in Pyton3.6 with Flask
 
 ## To do: 
-- [ ] Change port in settings
-- [ ] Save history of previous prices
 - [ ] Set interval between checking data
 - [ ] Change password option
 - [ ] First run script
 - [ ] Reset database to default
+- [ ] Add history
+- [X] Set new port as argument
 - [X] Coinmarketcap
 - [X] Select exchange for price check
 - [X] Nice loading animation in dashboard
