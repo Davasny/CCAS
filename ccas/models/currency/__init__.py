@@ -21,3 +21,12 @@ def get_all_wallets(*args):
 def get_wallets(currency):
     response = database.new_query("SELECT id, exchange FROM wallets WHERE currency;")
     return list(response)
+
+
+def get_coin_prices_settings():
+    response = database.new_query("SELECT `id`, `name`, `exchange` FROM coins_prices;")
+    return list(response)
+
+
+def update_coin_prices_settings(coin, new_exchange):
+    return database.new_argument_query("UPDATE `coins_prices` SET `exchange`=? WHERE `name`=?", (new_exchange, coin))
