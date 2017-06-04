@@ -3,12 +3,20 @@
 ## General information 
 Program written in Pyton3.6 with Flask
 
+## Installation
+- Install packages from requirements `pip install something`
+- Run `runserver.py`
+- Open browser http://localhost:5000/
+
+## Usage
+~~Password typed in dashboard will be hashed and putted into cookie - this password will be used to encrypt and decrypt all api keys. **Password can not be changed later without recreating API keys**~~
+
 ## To do: 
 - [ ] Set interval between checking data
-- [ ] Change password option
-- [ ] First run script
 - [ ] Reset database to default
 - [ ] Add history
+- [X] Change password option
+- [X] First run script
 - [X] Set new port as argument
 - [X] Coinmarketcap
 - [X] Select exchange for price check

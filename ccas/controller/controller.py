@@ -4,7 +4,7 @@ from ccas.models import currency, exchanges
 from ccas.models.exchanges import keys
 from flask import render_template, request, make_response, redirect
 from ccas.models.currency import wallets, groups
-from ccas.models import database, dashboard, coinmarketcap
+from ccas.models import database, dashboard, coinmarketcap, password
 from decimal import *
 import configparser
 import hashlib
@@ -60,7 +60,7 @@ def dashboard_content():
 
 
     # loooop through all exchanges
-    if check_if_pass():
+    if password.check_if_pass():
         for new_exchange in exchanges.get_exchanges():
             public_key = keys.get_key("public_key", new_exchange[0])
             secret_key = keys.get_key("private_key", new_exchange[0])
@@ -127,12 +127,13 @@ def exchanges_remove(id):
 
 @app.route('/exchanges/new', methods=['GET', 'POST'])
 def exchanges_new():
-    if request.method == 'POST':
-        exchange = request.form['exchange']
-        public_key = request.form['public_key']
-        private_ley = request.form['private_key']
+    if request.method == 'POST' :
+        if password.check_if_pass():
+            exchange = request.form['exchange']
+            public_key = request.form['public_key']
+            private_ley = request.form['private_key']
 
-        keys.save_keys(exchange, public_key, private_ley)
+            keys.save_keys(exchange, public_key, private_ley)
 
     response = make_response(redirect("/exchanges"))
 
@@ -279,8 +280,8 @@ def use_password():
         response = make_response(redirect(request.referrer))
         hash_password = ''
         if 'clear' not in request.form and request.form['password'] != '':
-            password = request.form['password'].encode('utf-8')
-            hash_password = hashlib.sha256(password).hexdigest()
+            new_password = request.form['password']
+            hash_password = password.generate_hash(new_password)
             response.set_cookie('password', hash_password)
         else:
             response.set_cookie('password', hash_password, expires=0)
@@ -363,9 +364,32 @@ def settings_coinmarketcap_remove(id):
 ######### SETTINGS CMC #########
 
 
-@app.route('/settings/password')
+
+######### SETTINGS PASSWORD #########
+@app.route('/settings_password', methods=['GET', 'POST'])
 def settings_password():
-    return render_template('settings_password.html')
+    messages = []
+    hash_password = ''
+
+    if request.referrer is not None and '/settings_password' in request.referrer:
+        old_pass = request.form['old_pass']
+        new_pass = request.form['new_pass']
+        new_pass2 = request.form['new_pass2']
+
+        if password.generate_hash(old_pass) == password.get_current_pass():
+            if new_pass == new_pass2:
+                keys.update_all_keys(old_pass, new_pass)
+                hash_password = password.generate_hash(new_pass)
+                messages.append('Password changed!')
+
+    response = make_response(render_template('settings_password.html', messages=messages))
+    if hash_password != '':
+        response.set_cookie('password', hash_password)
+
+
+    return response
+
+######### SETTINGS PASSWORD #########
 
 
 
@@ -378,18 +402,8 @@ def settings_database():
 
 @app.context_processor
 def utility_processor():
-    def get_pass_hash():
-        password = request.cookies.get('password')
-        return password[:5] + " [...] " + password[len(password) - 5:]
+    return dict(get_pass_hash=password.get_pass_hash_short, check_if_pass=password.check_if_pass)
 
-    return dict(get_pass_hash=get_pass_hash, check_if_pass=check_if_pass)
-
-
-def check_if_pass():
-    if 'password' in request.cookies and request.cookies['password'] != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855':
-        return True
-    else:
-        return False
 
 
 def sum_all_balances(balances):
