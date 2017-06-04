@@ -1,5 +1,6 @@
 {% extends "base_settings.html" %}
 {% block sub_title %}Dashboard{% endblock %}
+{% set active_sub_page = "dashboard" %}
 
 {% block settings_content %}
 
@@ -33,10 +34,10 @@
             </div>
             <input type="hidden" name="cols_setting" />
             <div class="pull-left">
-                <button class="btn btn-success btn-small" type="submit" name="save">SAVE</button>
+                <button class="btn btn-success btn-small" type="submit" name="cols_save">SAVE</button>
             </div>
             <div class="pull-right">
-                <button class="btn btn-danger btn-small" type="submit" name="cancel">CANCEL</button>
+                <button class="btn btn-danger btn-small" type="submit" name="cols_cancel">CANCEL</button>
             </div>
         </form>
     </div>
@@ -44,33 +45,46 @@
 
 <div class="panel panel-primary ">
     <div class="panel-heading">
-        <h3 class="panel-title">Prices</h3>
+        <h3 class="panel-title">Prices in BTC</h3>
     </div>
     <div class="panel-body">
-        <table class="table table-condensed table-bordered table-hover data-table" id="data_table">
-            <thead>
-                <tr>
-                    <th>Currency</th>
-                    <th>Exchange</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>BTC</td>
-                    <td>
-                        <select class="form-control">
-                            <option>BTC-e</option>
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="pull-left">
-            <button class="btn btn-success btn-small" type="submit" name="save">SAVE</button>
-        </div>
-        <div class="pull-right">
-            <button class="btn btn-danger btn-small" type="submit" name="cancel">CANCEL</button>
-        </div>
+        <form method="post" action="/settings" role="form">
+            <table class="table table-condensed table-bordered table-hover data-table" id="data_table">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th>Exchange</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for currency in all_currency %}
+                    <tr>
+                        <td>{{ currency }}{% if currency=="BTC" %}*{% endif %}</td>
+                        {% if currency in known_currecy %}
+                        {% set current_exchange = known_currecy[currency] %}
+                        {% endif %}
+                        <td>
+                            <select class="form-control" name="{{ currency }}">
+                                {% for exchange in all_exchanges %}
+                                <option {% if exchange==current_exchange %}selected{% endif %}>{{ exchange }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            *Price in USD/USDT
+            </br>
+            <div class="alert alert-warning" role="alert">Please make sure currency is supported by specified exchange. If not, you can add it in <a href="/settings_coinmarketcap">CoinMarketCap settings</a></div>
+
+            <div class="pull-left">
+                <button class="btn btn-success btn-small" type="submit" name="prices_save">SAVE</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-danger btn-small" type="submit" name="prices_cancel">CANCEL</button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

@@ -67,3 +67,8 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+#content_table{
+    width: 100%;
+    overflow: auto;
+}

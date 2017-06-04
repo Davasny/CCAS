@@ -7,7 +7,6 @@
 {% for message in errors%}
 <div class="alert alert-danger" role="alert">{{ message }}</div>
 {% endfor %}
-
 <table class="table table-condensed table-bordered table-hover" id="data_table">
     <thead>
         <tr>
@@ -35,7 +34,7 @@
         <tr>
             {% if columns_to_show['dash_show_currency_col'] %}<td>{{ element[0]|upper }}</td>{% endif %}
             {% if columns_to_show['dash_show_place_col'] %}
-            {% if element[4]=="CURRENCY" %}
+            {% if "CURRENCY" in element[4] %}
 
                 {% if element[5]!='' and element[5] is not none %}
                     {% set name = element[5] %}
@@ -49,6 +48,8 @@
                     <td><a href="https://etherscan.io/address/{{ element[1] }}">{{ name }}</a></td>
                 {% elif element[0]=="LTC" %}
                     <td><a href="http://ltc.blockr.io/address/info/{{ element[1] }}">{{ name }}</a></td>
+                {% elif "ETH_TOKEN" in element[4] %}
+                    <td><a href="https://ethplorer.io/address/{{ element[1] }}">{{ name }}</a></td>
                 {% endif %}
 
             {% elif element[4]=="EXCHANGE" %}
@@ -66,10 +67,42 @@
             {% if element[4]=="GROUP" %}<td><i>{{ element[1] }}</i></td>{% endif %}
             {% endif %}
 
-            {% if columns_to_show['dash_show_amount_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]) }}</td>{% endif %}
-            {% if columns_to_show['dash_show_price_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[3]) }}</td>{% endif %}
-            {% if columns_to_show['dash_show_total_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*element[3]) }}</td>{% endif %}
-            {% if columns_to_show['dash_show_usd_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*element[3]*btc_price) }}</td>{% endif %}
+
+            {% if columns_to_show['dash_show_amount_col'] %}
+            <td style="text-align: right;">
+                {{ '{0:0.8f}'.format(element[2]) }}
+            </td>
+            {% endif %}
+
+
+            {% if element[3]==-1 %}
+                {% set no_price = True %}
+                {% set price = 0 %}
+            {% else %}
+                {% set price = element[3] %}
+            {% endif %}
+
+
+            {% if columns_to_show['dash_show_price_col'] %}
+            <td style="text-align: right;">
+                {% if no_price %}
+                <label class="danger">NO PRICE AVAILABLE</label>
+                {% else %}
+                {{ '{0:0.8f}'.format(element[3]) }}
+                {% endif %}
+            </td>
+            {% endif %}
+
+            {% if columns_to_show['dash_show_total_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*price) }}</td>{% endif %}
+
+            {% if columns_to_show['dash_show_usd_col'] %}<td style="text-align: right;">{{ '{0:0.8f}'.format(element[2]*price*btc_price) }}</td>{% endif %}
         </tr>
     {% endfor %}
 </table>
+<script>
+$('#data_table').DataTable({
+    paging: false,
+    responsive: true
+});
+</script>
+
