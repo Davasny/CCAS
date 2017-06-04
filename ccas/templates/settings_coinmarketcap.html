@@ -1,0 +1,55 @@
+{% extends "base_settings.html" %}
+{% block sub_title %}CoinMarketCap{% endblock %}
+{% set active_sub_page = "coinmarketcap" %}
+
+{% block settings_content %}
+
+{% for message in messages %}
+<div class="alert alert-success" role="alert">{{ message }}</div>
+{% endfor %}
+
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h3 class="panel-title">Custom currency price</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-condensed table-bordered table-hover data-table" id="data_table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Currency</th>
+                    <th>CMC ID</th>
+                    <th>CoinMarketCap link</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            {% for element in all_settings %}
+                <tr>
+                    <td>{{ element[0] }}</td>
+                    <td>{{ element[1] }}</td>
+                    <td><code>{{ element[2] }}</code></td>
+                    <td><a href="https://coinmarketcap.com/assets/{{ element[2] }}" target="_blank" >https://coinmarketcap.com/assets/{{ element[2] }}</a></td>
+                    <td style="text-align: center;">
+                        <a class="btn btn-danger" href="/settings_coinmarketcap/remove/{{ element[0] }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                    </td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <form action="/settings_coinmarketcap/new" method="post" role="form">
+                    <td>-</td>
+                    <td>
+                        <input type="text" class="form-control" placeholder="Currency symbol" name="currency" required/>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="url" class="form-control" placeholder="Link" name="cmc_link" style="width: 100%" required/>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-small"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                    </td>
+                    </form>
+                </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

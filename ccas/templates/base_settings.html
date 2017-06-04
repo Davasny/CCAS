@@ -8,16 +8,17 @@
 
     {% set navigation_bar = [
         ('/settings', 'dashboard', 'Dashboard'),
+        ('/settings_coinmarketcap', 'coinmarketcap', 'CoinMarketCap'),
         ('/settings_password', 'password', 'Password'),
         ('/settings_database', 'database', 'Database')
     ] -%}
-    {% set active_page = active_page -%}
+    {% set active_sub_page = active_sub_page -%}
 
 
     <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
               {% for href, id, caption in navigation_bar %}
-              <li {% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+              <li {% if id == active_sub_page %} style="font-weight: bold;" {% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
               {% endfor %}
           </ul>
     </div>

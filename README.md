@@ -4,12 +4,12 @@
 Program written in Pyton3.6 with Flask
 
 ## To do: 
-- [ ] Coinmarketcap
-- [ ] Select exchange for price check
 - [ ] Change port in settings
 - [ ] Save history of previous prices
 - [ ] Set interval between checking data
 - [ ] Change password option
+- [X] Coinmarketcap
+- [X] Select exchange for price check
 - [X] Nice loading animation in dashboard
 - [X] Slect dashboard columns to show
 - [X] Sort data in dashboard
