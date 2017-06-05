@@ -50,10 +50,11 @@ def dashboard_content():
                 group_balances.append(0)
 
                 group_details = currency.get_details(new_currency, all_wallets, "balance")
-                if group_details:
-                    for wallet in group_details:
+                if True in group_details.values():
+                    for wallet in group_details['data']:
                         group_balances[2] += Decimal(wallet[2])
-                    group_balances.append(group_details[0][3])
+
+                    group_balances.append(group_details['data'][0][3])
                     group_balances.append("GROUP")
                 tmp_group.append(group_balances)
     balances.extend(tmp_group)
@@ -316,12 +317,15 @@ def settings():
     for new_currency in coinmarketcap.get_all_settings():
         all_exchanges.append('CMC_' + new_currency[1])
 
-    for new_currency in currency.get_coin_prices_settings():
+    for new_currency in currency.get_coin_prices_settings(): # from general settings
         if new_currency[1].upper() not in all_currency:
             all_currency.append(new_currency[1].upper())
 
+    for new_currency in coinmarketcap.get_all_settings(): # from cmc settings
+        if new_currency[1].upper() not in all_currency:
+            all_currency.append(new_currency[1].upper())
 
-    known_currecy={} # {'BTC':'bitfinex', 'LTC':'btc-e'}
+    known_currecy={}
     for new_currency in currency.get_coin_prices_settings():
         if new_currency[1].upper() in all_currency:
             if new_currency[2] == 'coinmarketcap':
