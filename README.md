@@ -11,7 +11,7 @@ CCAS is a program to automate checking balances on many wallets and exchanges. I
 pip install Flask
 pip install pycryptodome
 ```
-3. (On Python3.5 you may need `pip install jinja==2.8.1`)
+3. (On Python3.5 you may need `pip install jinja2==2.8.1`)
 4. Download latest source code archive from [Releases](https://github.com/Davasny/CCAS/releases/latest) (ccas.zip is for Windows)
 5. Unpack archive
 6. Run `runserver.py`
