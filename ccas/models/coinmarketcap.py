@@ -34,11 +34,14 @@ def download_data():
     current_time = int(time.time())
 
     if os.path.isfile(cmc_file_name):
-        data = json.load(open(cmc_file_name, 'r'))
-        old_time = data['date']
-        if old_time:
-            if (current_time - old_time) < (10):
-                get_new = False
+        try:
+            data = json.load(open(cmc_file_name, 'r'))
+            old_time = data['date']
+            if old_time:
+                if (current_time - old_time) < (10):
+                    get_new = False
+        except:
+            get_new = True
 
     if get_new:
         f = open(cmc_file_name, 'w+')
