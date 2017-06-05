@@ -8,8 +8,6 @@ def generate_hash(new_password):
 
 
 def check_if_pass():
-    print(check_if_first_run())
-
     if 'password' in request.cookies and request.cookies['password'] != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855':
         return True
     else:

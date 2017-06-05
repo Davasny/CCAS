@@ -30,14 +30,14 @@ INSERT INTO settings (id, name, value, description) VALUES (4, 'dash_show_amount
 INSERT INTO settings (id, name, value, description) VALUES (5, 'dash_show_price_col', 'True', 'Price column');
 INSERT INTO settings (id, name, value, description) VALUES (6, 'dash_show_total_col', 'True', 'Total column');
 INSERT INTO settings (id, name, value, description) VALUES (7, 'dash_show_usd_col', 'True', 'USD column');
-INSERT INTO settings (id, name, value, description) VALUES (8, 'dash_interval', '60', '');
+INSERT INTO settings (id, name, value, description) VALUES (8, 'dash_interval', '180', '');
 INSERT INTO settings (id, name, value, description) VALUES (9, 'pass_made', 'False', '');
 
 -- Table: wallet_group
 CREATE TABLE wallet_group (id INTEGER PRIMARY KEY AUTOINCREMENT, wallet_id INTEGER, group_id INTEGER);
 
 -- Table: wallets
-CREATE TABLE wallets (id INTEGER PRIMARY KEY AUTOINCREMENT, currency VARCHAR, address TEXT, name TEXT, parent_group INTEGER);
+CREATE TABLE wallets (id INTEGER PRIMARY KEY AUTOINCREMENT, currency VARCHAR, address TEXT, name TEXT);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
