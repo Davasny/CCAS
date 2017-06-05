@@ -398,8 +398,10 @@ def settings_password():
 
 
 
-@app.route('/settings/database')
+@app.route('/settings_database', methods=['GET', 'POST'])
 def settings_database():
+    if request.referrer is not None and '/settings_database' in request.referrer:
+        database.first_run()
     return render_template('settings_database.html')
 
 ######### SETTINGS #########

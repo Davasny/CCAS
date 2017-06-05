@@ -1,0 +1,37 @@
+{% extends "base_settings.html" %}
+{% block sub_title %}Database{% endblock %}
+{% set active_sub_page = "database" %}
+
+{% block settings_content %}
+
+{% for message in messages %}
+<div class="alert alert-success" role="alert">{{ message }}</div>
+{% endfor %}
+
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h3 class="panel-title">Restore to default</h3>
+    </div>
+    <div class="panel-body">
+        <div class="checkbox">
+            <label id="understand">
+                <input type="checkbox" id="checkbox_understand"> I understand that will restore database to default settings. It will remove API keys and wallets addresses from CCAS
+            </label>
+        </div>
+        <form action="/settings_database" method="post" role="form">
+            <button type="submit" class="btn btn-danger btn-lg disabled" name="reset_db" id="reset_db">RESET DATABASE AND REMOVE ALL DATA</button>
+        </form>
+    </div>
+</div>
+<script>
+    $( document ).ready(function() {
+        $('#understand').click(function() {
+            if($("#checkbox_understand").is(':checked'))
+                $("#reset_db").removeClass('disabled');
+            else
+                $("#reset_db").addClass('disabled');
+        });
+    });
+</script>
+{% endblock %}
+
