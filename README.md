@@ -6,7 +6,7 @@ CCAS is a program to automate checking balances on many wallets and exchanges. I
 ### Windows
 1. Download ccas.zip from [Releases](https://github.com/Davasny/CCAS/releases/latest)
 2. Unzip file
-3. Run `runserver\runserver.exe`
+3. Run `ccas\runserver.exe`
 6. Open browser default on [http://localhost:5000/](http://localhost:5000/)
 
 ### Linux
