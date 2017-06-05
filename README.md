@@ -21,8 +21,7 @@ pip install pycryptodome
 
 
 ## To do: 
-- [ ] Set interval between checking data
-- [ ] Reset database to default
+- [ ] Export and import settings
 
 
 ## Supported exchanges:
