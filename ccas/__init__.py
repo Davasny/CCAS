@@ -14,7 +14,6 @@ if not os.path.isfile("ccas/ccas_main_database.db"):
 
         operating_database = sqlite3.connect("ccas/ccas_main_database.db")
         for line in lines:
-            print(line)
             cur = operating_database.cursor()
             cur.execute(line)
 

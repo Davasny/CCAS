@@ -36,5 +36,4 @@ def update_coin_prices_settings(coin, new_exchange):
     else:
         response = database.new_argument_query("INSERT INTO `coins_prices` (`exchange`, `name`) VALUES (?, ?)",
                                                (new_exchange, coin))
-
     return response
