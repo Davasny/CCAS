@@ -81,11 +81,9 @@ def dashboard_content():
 
 
     btc_price = exchanges.get_btc_price()
-
     # [CURRENCY, PLACE, AMOUNT, PRICE, TYPE, NAME]
     total_btc = sum_all_balances(balances)
     columns_to_show = dashboard.get_column_to_show()
-
     return render_template('dashboard_content.html', balances=balances, total_btc=total_btc, errors=errors, btc_price=btc_price,
                            columns_to_show=columns_to_show)
 
@@ -128,7 +126,7 @@ def exchanges_remove(id):
 @app.route('/exchanges/new', methods=['GET', 'POST'])
 def exchanges_new():
     if request.method == 'POST' :
-        if password.check_if_pass():
+        if password.check_if_pass() and not password.check_if_first_run():
             exchange = request.form['exchange']
             public_key = request.form['public_key']
             private_ley = request.form['private_key']
@@ -303,8 +301,8 @@ def settings():
                     bool = True if val=="on" else False
                     dashboard.update_column(key, bool)
 
-        elif 'prices_setting' in request.form:
-            a = 1
+        #elif 'prices_setting' in request.form:
+           # a = 1
     elif request.method == 'POST' and 'prices_save' in request.form:
         for key, val in request.form.items():
             if 'save' not in key:
@@ -372,15 +370,21 @@ def settings_password():
     hash_password = ''
 
     if request.referrer is not None and '/settings_password' in request.referrer:
-        old_pass = request.form['old_pass']
         new_pass = request.form['new_pass']
         new_pass2 = request.form['new_pass2']
 
-        if password.generate_hash(old_pass) == password.get_current_pass():
-            if new_pass == new_pass2:
-                keys.update_all_keys(old_pass, new_pass)
-                hash_password = password.generate_hash(new_pass)
-                messages.append('Password changed!')
+        if 'first_run' in request.form and new_pass == new_pass2:
+            hash_password = password.generate_hash(new_pass)
+            password.made_first_run()
+            messages.append('Password set! Now you can add new keys in Exchanges')
+        else:
+            old_pass = request.form['old_pass']
+
+            if password.generate_hash(old_pass) == password.get_current_pass():
+                if new_pass == new_pass2:
+                    keys.update_all_keys(old_pass, new_pass)
+                    hash_password = password.generate_hash(new_pass)
+                    messages.append('Password changed!')
 
     response = make_response(render_template('settings_password.html', messages=messages))
     if hash_password != '':
@@ -402,7 +406,7 @@ def settings_database():
 
 @app.context_processor
 def utility_processor():
-    return dict(get_pass_hash=password.get_pass_hash_short, check_if_pass=password.check_if_pass)
+    return dict(get_pass_hash=password.get_pass_hash_short, check_if_pass=password.check_if_pass, check_if_first_run=password.check_if_first_run)
 
 
 

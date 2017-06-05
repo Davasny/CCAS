@@ -30,6 +30,7 @@ INSERT INTO settings (id, name, value, description) VALUES (4, 'dash_show_amount
 INSERT INTO settings (id, name, value, description) VALUES (5, 'dash_show_price_col', 'True', 'Price column');
 INSERT INTO settings (id, name, value, description) VALUES (6, 'dash_show_total_col', 'True', 'Total column');
 INSERT INTO settings (id, name, value, description) VALUES (7, 'dash_show_usd_col', 'True', 'USD column');
+INSERT INTO settings (id, name, value, description) VALUES (8, 'pass_made', 'False', '');
 
 -- Table: wallet_group
 CREATE TABLE wallet_group (id INTEGER PRIMARY KEY AUTOINCREMENT, wallet_id INTEGER, group_id INTEGER);
