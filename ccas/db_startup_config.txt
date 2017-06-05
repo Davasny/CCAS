@@ -1,5 +1,5 @@
-PRAGMA foreign_keys = off;
-BEGIN TRANSACTION;
+-- PRAGMA foreign_keys = off;
+-- BEGIN TRANSACTION;
 
 -- Table: cmc_currency_settings
 CREATE TABLE cmc_currency_settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, id_on_cmc TEXT);
@@ -39,5 +39,5 @@ CREATE TABLE wallet_group (id INTEGER PRIMARY KEY AUTOINCREMENT, wallet_id INTEG
 -- Table: wallets
 CREATE TABLE wallets (id INTEGER PRIMARY KEY AUTOINCREMENT, currency VARCHAR, address TEXT, name TEXT);
 
-COMMIT TRANSACTION;
-PRAGMA foreign_keys = on;
+-- COMMIT TRANSACTION;
+-- PRAGMA foreign_keys = on;
