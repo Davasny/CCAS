@@ -3,11 +3,6 @@
 CCAS is a program to automate checking balances on many wallets and exchanges. It supports checking prices and counting summary balances in BTC and USD.
 
 ## Installation
-### Windows
-1. Download ccas.zip from [Releases](https://github.com/Davasny/CCAS/releases/latest)
-2. Unzip file
-3. Run `ccas\runserver.exe`
-6. Open browser default on [http://localhost:5000/](http://localhost:5000/)
 
 ### Linux
 1. Install Python3.6
@@ -16,9 +11,15 @@ CCAS is a program to automate checking balances on many wallets and exchanges. I
 pip install Flask
 pip install pycryptodome
 ```
-3. Download latest release code from [Releases](https://github.com/Davasny/CCAS/releases/latest)
-4. Unzip code
+3. Download latest source code archive from [Releases](https://github.com/Davasny/CCAS/releases/latest) (ccas.zip is for Windows)
+4. Unpack archive
 5. Run `runserver.py`
+6. Open browser default on [http://localhost:5000/](http://localhost:5000/)
+
+### Windows (not recommended system)
+1. Download ccas.zip from [Releases](https://github.com/Davasny/CCAS/releases/latest)
+2. Unzip file
+3. Run `ccas\runserver.exe`
 6. Open browser default on [http://localhost:5000/](http://localhost:5000/)
 
 ## Optional parameters for `runserver.py`
