@@ -292,3 +292,6 @@ file_hierarchy.txt
 *.zip
 runserver.spec
 ccas/cmcTempFile.json
+build/
+Crypto/
+dist/
