@@ -8,40 +8,6 @@
 <div class="alert alert-success" role="alert">{{ message }}</div>
 {% endfor %}
 
-<div class="panel panel-primary ">
-    <div class="panel-heading">
-        <h3 class="panel-title">Columns in dashboard</h3>
-    </div>
-    <div class="panel-body">
-        <form role="form" action="/settings" method="POST">
-            <div class="checkbox">
-                {% for element in columns_data %}
-                <label>
-                    {% if element[1] %}
-                        {% set checked = 'checked="checked"' %}
-                    {% else %}
-                        {% set checked = '' %}
-                    {% endif %}
-                    <input type="checkbox" value="on" {{ checked }} name="{{ element[0] }}">
-                    <input type='hidden' value="off" name='{{ element[0] }}'>
-                    {% if element[2]=='' %}
-                        {{ element[0] }}
-                    {% else %}
-                        {{ element[2] }}
-                    {% endif %}
-                </label></br>
-                {% endfor %}
-            </div>
-            <input type="hidden" name="cols_setting" />
-            <div class="pull-left">
-                <button class="btn btn-success btn-small" type="submit" name="cols_save">SAVE</button>
-            </div>
-            <div class="pull-right">
-                <button class="btn btn-danger btn-small" type="submit" name="cols_cancel">CANCEL</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div class="panel panel-primary ">
     <div class="panel-heading">
@@ -83,6 +49,59 @@
             </div>
             <div class="pull-right">
                 <button class="btn btn-danger btn-small" type="submit" name="prices_cancel">CANCEL</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h3 class="panel-title">Columns in dashboard</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-inline" action="/settings" method="POST" role="form">
+            <div class="input-group">
+                <div class="input-group-addon">Interval in refreshing dashboard data in seconds</div>
+                <span class="input-group-btn">
+                    <input name="new_time" type="number" class="form-control" min="10" required value="{{ current_time }}"/>
+                    <button type="submit" class="btn btn-success" name="time_save">SAVE</button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-primary ">
+    <div class="panel-heading">
+        <h3 class="panel-title">Columns in dashboard</h3>
+    </div>
+    <div class="panel-body">
+        <form role="form" action="/settings" method="POST">
+            <div class="checkbox">
+                {% for element in columns_data %}
+                <label>
+                    {% if element[1] %}
+                        {% set checked = 'checked="checked"' %}
+                    {% else %}
+                        {% set checked = '' %}
+                    {% endif %}
+                    <input type="checkbox" value="on" {{ checked }} name="{{ element[0] }}">
+                    <input type='hidden' value="off" name='{{ element[0] }}'>
+                    {% if element[2]=='' %}
+                        {{ element[0] }}
+                    {% else %}
+                        {{ element[2] }}
+                    {% endif %}
+                </label></br>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="cols_setting" />
+            <div class="pull-left">
+                <button class="btn btn-success btn-small" type="submit" name="cols_save">SAVE</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-danger btn-small" type="submit" name="cols_cancel">CANCEL</button>
             </div>
         </form>
     </div>

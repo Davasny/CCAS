@@ -21,6 +21,10 @@ $( document ).ready(function() {
         $('.small_loader').css("display", "inline-block");
         load_page();
     });
+    window.setInterval(function(){
+        $('#refresh').click();
+    }, {{ (interval|int)*1000 }});
+
 });
 
 function load_page(){

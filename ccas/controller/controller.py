@@ -17,7 +17,7 @@ config.read("ccas/config.ini")
 @app.route('/')
 @app.route('/dashboard')
 def dashboard_view():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', interval=dashboard.get_refresh_interval())
 
 
 
@@ -300,9 +300,8 @@ def settings():
                 if key != 'save':
                     bool = True if val=="on" else False
                     dashboard.update_column(key, bool)
-
-        #elif 'prices_setting' in request.form:
-           # a = 1
+    elif request.method == 'POST' and 'time_save' in request.form:
+        dashboard.save_new_time(request.form['new_time'])
     elif request.method == 'POST' and 'prices_save' in request.form:
         for key, val in request.form.items():
             if 'save' not in key:
@@ -330,7 +329,9 @@ def settings():
             else:
                 known_currecy[new_currency[1].upper()] = new_currency[2]
 
-    return render_template('settings_dashboard.html', columns_data=dashboard.get_columns_details(), all_currency=all_currency, all_exchanges=all_exchanges, known_currecy=known_currecy, messages=messages)
+    return render_template('settings_dashboard.html', columns_data=dashboard.get_columns_details(),
+                           all_currency=all_currency, all_exchanges=all_exchanges, known_currecy=known_currecy,
+                           messages=messages, current_time=dashboard.get_refresh_interval())
 
 
 
