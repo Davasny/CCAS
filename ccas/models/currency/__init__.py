@@ -29,4 +29,12 @@ def get_coin_prices_settings():
 
 
 def update_coin_prices_settings(coin, new_exchange):
-    return database.new_argument_query("UPDATE `coins_prices` SET `exchange`=? WHERE `name`=?", (new_exchange, coin))
+    if_exist = database.new_query("SELECT count(1) FROM `coins_prices` WHERE `name`='"+ coin +"'")[0][0]
+    if if_exist:
+        response = database.new_argument_query("UPDATE `coins_prices` SET `exchange`=? WHERE `name`=?",
+                                               (new_exchange, coin))
+    else:
+        response = database.new_argument_query("INSERT INTO `coins_prices` (`exchange`, `name`) VALUES (?, ?)",
+                                               (new_exchange, coin))
+
+    return response

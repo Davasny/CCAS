@@ -7,49 +7,65 @@ from ccas.models import exchanges
 
 def get_balance(list_of_address):
     return_reposne = {}
-    try:
-        string_of_addresses = ''
+    # try:
+    string_of_addresses = ''
 
-        if isinstance(list_of_address[0], list):
-            use_names = True
+    if isinstance(list_of_address[0], list):
+        use_names = True
+    else:
+        use_names = False
+
+    for address in list_of_address:
+        if use_names:
+            string_of_addresses = address[0] + ',' + string_of_addresses
         else:
-            use_names = False
+            string_of_addresses = address + ',' + string_of_addresses
 
-        for address in list_of_address:
-            if use_names:
-                string_of_addresses = address[0] + ',' + string_of_addresses
-            else:
-                string_of_addresses = address + ',' + string_of_addresses
+    req = urllib.request.Request('http://ltc.blockr.io/api/v1/address/balance/' + string_of_addresses[:-1], headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    parsed = json.loads(con.read().decode('utf-8'))['data']
+    #all_balances = [([0] * 6) for i in range(len(parsed))]
 
-        req = urllib.request.Request('http://ltc.blockr.io/api/v1/address/balance/' + string_of_addresses[:-1], headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-
-        parsed = json.loads(con.read().decode('utf-8'))['data']
-
-        all_balances = [([0] * 6) for i in range(len(parsed))]
-
-        price = get_price()
-
+    all_balances = []
+    price = Decimal(get_price())
+    if isinstance(parsed, list):
+        # multiple wallets
         i = 0
         for account in parsed:
-            all_balances[i][0] = "LTC"
-            all_balances[i][1] = account['address']
-            all_balances[i][2] = Decimal(account['balance'])
-            all_balances[i][3] = price
-            all_balances[i][4] = "CURRENCY"
+            tmp_balances = []
+            tmp_balances.append("LTC")
+            tmp_balances.append(account['address'])
+            tmp_balances.append(Decimal(account['balance']))
+            tmp_balances.append(price)
+            tmp_balances.append("CURRENCY")
 
             if use_names:
-                all_balances[i][5] = list_of_address[i][1]
+                tmp_balances.append(list_of_address[i][1])
             else:
-                all_balances[i][5] = ''
+                tmp_balances.append('')
+            all_balances.append(tmp_balances)
             i += 1
+    else:
+        # one wallet
+        tmp_balances = []
+        tmp_balances.append("LTC")
+        tmp_balances.append(parsed['address'])
+        tmp_balances.append(Decimal(parsed['balance']))
+        tmp_balances.append(price)
+        tmp_balances.append("CURRENCY")
 
-        return_reposne["status"] = True
-        return_reposne["data"] = all_balances
+        if use_names:
+            tmp_balances.append(list_of_address[0][1])
+        else:
+            tmp_balances.append('')
+        all_balances.append(tmp_balances)
 
-    except Exception as e:
-        return_reposne["status"] = False
-        return_reposne["msg"] = e
+    return_reposne["status"] = True
+    return_reposne["data"] = all_balances
+
+    # except Exception as e:
+    #     return_reposne["status"] = False
+    #     return_reposne["msg"] = e
 
     return return_reposne
 
