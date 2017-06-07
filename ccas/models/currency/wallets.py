@@ -8,7 +8,8 @@ def get_raw_addresses(currency):
     return response
 
 def get_addresses_with_names(currency):
-    raw_data = database.new_query("select wallets.address, wallets.name, wallets.id from wallets where currency='"+ currency +"' ;") # (parent_group is NULL or parent_group = '') AND
+    raw_data = database.new_query(
+        "SELECT wallets.address, wallets.name, wallets.id FROM `wallets` LEFT JOIN `wallet_group` ON wallet_group.wallet_id=wallets.id WHERE wallet_group.wallet_id IS NULL AND wallets.currency='"+ currency +"';")
     response = []
     for row in raw_data:
         tmp_list = []
