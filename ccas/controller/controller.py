@@ -30,7 +30,6 @@ def dashboard_content():
     tmp_group = []
     for new_currency in supported_currency:
         all_wallets = wallets.get_addresses_with_names(new_currency) # wallets without group
-
         if all_wallets:
             new_response = currency.get_details(new_currency, all_wallets, "balance")
             if True in new_response.values():
@@ -38,10 +37,8 @@ def dashboard_content():
             else:
                 errors.append("Something went wrong with " + new_currency + " - " + str(new_response['msg']))
 
-        all_groups = groups.get_groups_for(new_currency)
-
         group_balances = []
-        for group in all_groups:
+        for group in groups.get_groups_for(new_currency):
             all_wallets = wallets.get_address_by_group(group[0])
 
             if all_wallets:
