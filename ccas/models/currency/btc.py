@@ -8,9 +8,12 @@ def get_balance(list_of_address):
     return_reposne = {}
     try:
         string_of_addresses = ''
+        address_name = {}
 
         if isinstance(list_of_address[0], list):
             use_names = True
+            for element in list_of_address:
+                address_name[element[0]] = element[1]
         else:
             use_names = False
 
@@ -36,7 +39,7 @@ def get_balance(list_of_address):
             all_balances[i][4] = "CURRENCY"
 
             if use_names:
-                all_balances[i][5] = list_of_address[i][1]
+                all_balances[i][5] = address_name[address]
             else:
                 all_balances[i][5] = ''
 
